@@ -1,3 +1,11 @@
+<!-- Adding TODOs 
+-show posts user is following or has posted
+-notifications
+-upload profile/banner photos
+-connect wallet to verify token ownership (this should be done when registering as well)
+-let user change email/connected wallet/password
+-->
+
 <?php
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
