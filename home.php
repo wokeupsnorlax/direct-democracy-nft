@@ -1,3 +1,15 @@
+<!-- Adding TODOs 
+
+-"home" feed
+    -suggested subs
+    -joined subs
+    -organize by time/upvotes/hot/controversial
+-search bar
+    -suggested subs
+-chat/message area
+
+-->
+
 <?php
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
