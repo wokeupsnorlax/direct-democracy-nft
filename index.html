@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Direct Democracy Communication</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid p-5 bg-primary text-white text-center">
+  <h1>Direct Democracy Communication</h1>
+  <p>Join a community and make your voice heard!</p> 
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Login
+  </button>
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#signupModal">
+    Sign Up
+  </button>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="loginModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Login</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        
+        <div class="container mt-3">
+          <div class="login">
+        
+          <form action="authenticate.php" method="post">
+				<label for="username">
+					<i class="fas fa-user"></i>
+				</label>
+				<input type="text" name="username" placeholder="Username" id="username" required>
+				<label for="password">
+					<i class="fas fa-lock"></i>
+				</label>
+				<input type="password" name="password" placeholder="Password" id="password" required>
+				<input type="submit" value="Login">
+			</form>
+        
+
+<!--
+          <form action="authenticate.php" class="post was-validated">
+            <div class="mb-3 mt-3">
+              <label for="username" class="form-label">Username:</label>
+              <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password:</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="myCheck"  name="remember" required>
+              <label class="form-check-label" for="myCheck">I agree on blabla.</label>
+              <div class="valid-feedback">Valid.</div>
+              <div class="invalid-feedback">Check this checkbox to continue.</div>
+            </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+-->
+
+
+        </div>
+        </div>
+
+      </div>
+
+      <!-- Modal footer 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>            -->
+
+    </div>
+  </div>
+</div>
+  
+<!-- The Modal -->
+<div class="modal" id="signupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+
+        <div class="register">
+			<h1>Register</h1>
+			<form action="register.php" method="post" autocomplete="off">
+				<label for="username">
+					<i class="fas fa-user"></i>
+				</label>
+				<input type="text" name="username" placeholder="Username" id="username" required>
+				<label for="password">
+					<i class="fas fa-lock"></i>
+				</label>
+				<input type="password" name="password" placeholder="Password" id="password" required>
+				<label for="email">
+					<i class="fas fa-envelope"></i>
+				</label>
+				<input type="email" name="email" placeholder="Email" id="email" required>
+				<input type="submit" value="Register">
+			</form>
+		</div>
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+  
+<div class="container mt-5 text-center">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Vision:</h3>
+      <p>The purpose of this project is to create, maintain, and update a free and open source communication and direct democracy platform. </p>
+      <p>We have the technology to vote on America's next Idol during the commercial break. We absolutely have the technology to form a direct democracy platform.</p>
+      <p>The overall goal would be to provide a communication platform that is free from being punished by the vague rule of "brigading" while weeding out pontential bad actors.</p>
+      <p>Everyone would be given their own NFT to access the platform and submit posts/comments.</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Why do this?</h3>
+      <p>The world is getting more divided as the top 1% try to distract us with Red vs Blue bs.</p>
+      <p>All People are Equal and deserve to be treated with the same respect no matter which hockey team, football club, Pokemon game, or political party has tricked you into thinking they're the best.</p>
+      <p>Just like Pokemon Red and Blue the political parties are the SAME GAME with a different Monster on the box.</p>
+      <p>I am neither left nor right, red nor blue. I'm from Pallet Town and I'm coming for the Elite.</p>
+      <p>This platform is for anyone wanting to treat ALL People Equal.</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Strategy:</h3>        
+      <p>Using open source collaboration to ensure everything is transparent, create a Reddit Clone (without the "TikTok" video features), 
+add NFT authentication so only users with the NFT can contribute to the commuinity, and mint.</p>
+    </div>
+  </div>
+ </div>
+  
+<div class="container mt-5 text-center"> 
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Requirements:</h3>
+      <p>The project requires a few dedicated volunteers to add their insights; make improvements to the plan; add database hosting to store site/userdata; and a few trusted NFT creators to mint the NFTS.</p>
+      <p>Once the project is completed and functional, a trusted team of volunteers will be needed to vet and distribute the NFTs to the appropriate people.</p>
+      <p>The criteria for receiving the NFT should be decided by the entire open source team.</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>An Overarching Plan:</h3>
+      <p>1) Create a website clone that looks and feels like Reddit.</p>
+      <p>a) front end dev -make it pretty</p>
+      <p>b) back end dev -make it work</p>
+      <p>2)Add NFT Authentication so only users with the NFT can contribute to the NFT</p>
+      <p>3)Create the relevant Minting files</p>
+      <p>a) metadata json</p>
+      <p>b) 5x7 ratio gif</p>
+      <p>c) 10x10 ratio png</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Metrics:</h3>
+      <p>I have decided to not track any Key Performance Indicators yet. Until we decide as a team the best way to track success/failures. </p>
+      <p>For now, if the Front End for the users isn't up in a month I will consider that my responsibility and a personal failure if not completed.</p>
+      <p>Absolute most optimistic goal: I'd like to get this fully up and running inside 3-5 months. With 2-5 other volunteers I believe this is absolutely achievable.</p>
+    </div>
+  </div>
+  </div>
+  
+<div class="container mt-5 text-center">
+  <div class="row">
+    <h2>Step-by-Step</h2>
+    <div class="col-sm-6">
+      <h3>For Users:</h3>
+      <p>login page > logged in page(dashboard/home) > subreddits in your home/dashboard > posts on subs > comments on posts </p>
+      <p>> user profiles</p>
+    </div>
+    <div class="col-sm-6">
+      <h3>For Mods:</h3>
+      <p>mod dashboard > subs you mod</p>
+      <p>> posts/comments you've flagged</p>
+    </div>
+  </div>
+  </div>
+  
+<div class="container mt-5 text-center">
+  <div class="row">
+    <h2>Suggested Database Structure for back end(rework as needed):</h2>
+    <div class="col-sm-4">
+      <h3>User:</h3>
+      <p>Username</p>
+      <p>Bio</p>
+      <p>Profile photo</p>
+      <p>Banner photo</p>
+      <p>Joined subreddits - list of SubReddit</p>
+      <p>Followers -list of Users</p>
+      <p>Following -list of Users</p>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>SubReddit:</h3>
+      <p>Name</p>
+      <p>Featured photo</p>
+      <p>Profile photo</p>
+      <p>Banner photo</p>
+      <p>NSFW -Yes/no with "no" as default</p>
+      <p>Mods -list of Users</p>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Post:</h3>
+      <p>Title</p>
+      <p>Upvotes -list of Users</p>
+      <p>Downvotes -list of Users</p>
+      <p>original sub -SubReddit</p>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Post Content:</h3>
+      <p>Post text</p>
+      <p>Post image</p>
+      <p>original post -Post</p>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Chat:</h3>
+      <p>Chat users -list of Users</p>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Message:</h3>
+      <p>Content</p>
+      <p>Original chat -Chat</p>
+    </div>
+
+
+  </div>
+
+
+</div>
+
+</body>
+</html>
