@@ -1,11 +1,3 @@
-<!-- Adding TODOs 
--show posts user is following or has posted
--notifications
--upload profile/banner photos
--connect wallet to verify token ownership (this should be done when registering as well)
--let user change email/connected wallet/password
--->
-
 <?php
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
@@ -39,11 +31,13 @@ $stmt->close();
 		<title>Profile Page</title>
 		<link href="style.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
 	<body class="loggedin">
 		<nav class="navtop">
 			<div>
-				<h1>Website Title</h1>
+				<h1><a href="home.php">Direct Democracy Communication</a></h1>
 				<a href="profile.php"><i class="fas fa-user-circle"></i>Profile</a>
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>

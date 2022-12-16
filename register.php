@@ -1,7 +1,3 @@
-<!-- TODO
--needs to connect with wallet to verify NFT ownership
--->
-
 <?php
 // Change this to your connection info.
 $DATABASE_HOST = 'localhost';

@@ -1,11 +1,13 @@
 <?php
 // We need to use sessions, so you should always start sessions using the below code.
-session_start();
+session_start();?>
+<?php
 // If the user is not logged in redirect to the login page...
-if (!isset($_SESSION['loggedin'])) {
+if ( ( !isset($_SESSION['id']) ) || ($_GET['cid'] =="")) {
 	header('Location: index.html');
 	exit;
 }
+$cid = $_GET['cid'];
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +30,7 @@ if (!isset($_SESSION['loggedin'])) {
 		</nav>
 		
 		<div class="content">
-			<h2>Home</h2>
+			<h2>Create a Topic</h2>
 			<p>Welcome back, <a href="profile.php"><?=$_SESSION['name']?></a>! Make a post and let your voice be heard!
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#postModal">
     				Post
@@ -37,25 +39,7 @@ if (!isset($_SESSION['loggedin'])) {
 				
 			</p>
 
-			<?php
-			mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-			$con = mysqli_connect('localhost', 'root', '', 'phplogin');
-
-			$sql =  "SELECT * FROM catergories ORDER BY catergory_title ASC";
-			$res = mysqli_query($con, $sql) or die(mysqli_error());
-			$categories = "";
-			if (mysqli_num_rows($res) > 0){
-				while($row = mysqli_fetch_assoc($res)){
-					$id = $row['id'];
-					$title = $row['catergory_title'];
-					$description = $row['catergory_description'];
-					$categories .= "<div class='text-center'><a href ='view_category.php?cid=".$id."' class='cat_links'><button style='width:100%;'class='btn btn-success'><h1 >".$title."</h1><p>".$description."</p></button></a></div>";
-				}
-				echo $categories;
-			} else {
-				echo"<p>There are no posts available! Make a post and let your voice be heard!</p>";
-			}
-			?>
+			
 
 			
 			
@@ -80,20 +64,22 @@ if (!isset($_SESSION['loggedin'])) {
 
         <div class="post">
 			
-			<form action="post.php" method="post" autocomplete="off">
+			<form action="create_topic_parse.php" method="post" autocomplete="off">
            
                 <div class="mb-3 mt-3">
 				<p><a name="username" type="text" id="username" href="profile.php"><?=$_SESSION['name']?></a></p></div>
 
 
                 <div class="mb-3 mt-3">
-				<textarea class="form-control" rows="1" id="title" name="title" type="text"></textarea></div>
+				<textarea class="form-control" rows="1" id="topic_title" name="topic_title" type="text"></textarea></div>
 
                 <div class="mb-3 mt-3">
-				<textarea class="form-control" rows="5" id="comment" name="comment" type="text"></textarea></div>
+				<textarea class="form-control" rows="5" id="topic_content" name="topic_content" type="text"></textarea></div>
+
 
                 <div class="mb-3 mt-3">
-				<input type="submit" value="Post"></div>
+                <input type="hidden" name="cid" value="<?php echo $cid; ?>"/>
+				<input type="submit" name="topic_submit" value="Post"></div>
                 
 			</form>
 		</div>
