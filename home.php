@@ -29,10 +29,10 @@ if (!isset($_SESSION['loggedin'])) {
 		
 		<div class="content">
 			<h2>Home</h2>
-			<p>Welcome back, <a href="profile.php"><?=$_SESSION['name']?></a>! Make a post and let your voice be heard!
-				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#postModal">
-    				Post
-  				</button>
+			<p>Welcome back, <a href="profile.php"><?=$_SESSION['name']?></a>! Join a Sub and start a discussion!
+				<!--button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#catModal">
+    				Create Sub
+  				</button-->
 
 				
 			</p>
@@ -65,13 +65,13 @@ if (!isset($_SESSION['loggedin'])) {
 
 
 <!-- The Modal -->
-<div class="modal" id="postModal">
+<div class="modal" id="catModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Create a Post</h4>
+        <h4 class="modal-title">Create a Sub</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 

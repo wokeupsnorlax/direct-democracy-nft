@@ -41,6 +41,9 @@ $tid = $_GET['tid'];
             
             $cid = $_GET['cid'];
             $tid = $_GET['tid'];
+            $pid = "";
+            $rating_action = "";
+            $uid = $_SESSION['name'];
             
             $sql =  "SELECT * FROM topics WHERE category_id='".$cid."' AND id='".$tid."' LIMIT 1";
             $res = mysqli_query($con, $sql) or die(mysqli_error());
@@ -55,11 +58,62 @@ $tid = $_GET['tid'];
                 while($row = mysqli_fetch_assoc($res)){
                     $sql2 =  "SELECT * FROM posts WHERE category_id='".$cid."' AND topic_id='".$tid."'" ;
                     $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
+
+
+                    
+
+
+                    
+                    
                     while($row2 = mysqli_fetch_assoc($res2)){
-                        echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> <button type='button' class='btn btn-success' >Up</button>".$row['updoots']."<button type='button' class='btn btn-primary'>Down</button> ".$row['boops']."</p></div></td></tr>";
+                        $sql7 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='updoot'";
+                        $result = mysqli_query($con, $sql7);
+                        $row7 = mysqli_fetch_array($result);
+                        $total = $row7[0];
+
+                        $sql8 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='boop'";
+                        $result = mysqli_query($con, $sql8);
+                        $row8 = mysqli_fetch_array($result);
+                        $total8 = $row8[0];
+
+                        echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> 
+                        
+                        <form action='update_updoots.php' method='post'>
+                        
+                        <input type='hidden' name='rating_action' value='updoot'/>
+
+                        <input type='hidden' name='tid' value='".$row2['id']."'/>
+
+                        <input type='submit' name='updoot_submit' id='updoot_submit' value='Up' />".$total."
+                        
+                        </form>
+
+                        <form action='update_updoots.php' method='post'>
+                        
+                        <input type='hidden' name='rating_action' value='boop'/>
+
+                        <input type='hidden' name='tid' value='".$row2['id']."'/>
+
+                        <input type='submit' name='updoot_submit' id='updoot_submit' value='Down' />".$total8."
+                        
+                        </form>
+
+
                         
                         
+
                         
+                        </p></div></td></tr>";
+
+
+                        
+
+                       
+
+                        
+
+
+                        //echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> <button type='button' class='btn btn-success' >Up</button>".$row2['updoots']."<button type='button' class='btn btn-primary'>Down</button> ".$row2['boops']."</p></div></td></tr>";
                     }
                     $old_views = $row['topic_views'];
                     $new_views = $old_views + 1;
@@ -76,14 +130,69 @@ $tid = $_GET['tid'];
             }
 
 
-
+            
 
 
 			?>
 
 			
 			
+        <!--?php
+
+function updoot()
+{
+   echo "updoot";
+
+
+   $sql8 =  "SELECT * FROM rating_info WHERE user_id='".$uid."' AND topic_id='".$tid."'" ;
+   $res8 = mysqli_query($con, $sql8) or die(mysqli_error());
+
+   $old_updoots = $row['topic_updoots'];
+   $new_updoots = $old_updoots + 1;
+
+
+   $sql2 =  "SELECT * FROM posts WHERE category_id='".$cid."' AND topic_id='".$tid."'" ;
+   $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
+
+
+
+
+   $old_views = $row['topic_views'];
+   $new_views = $old_views + 1;
+   $sql3 = "UPDATE topics SET topic_views='".$new_views."' WHERE category_id='".$cid."' AND id='".$tid."' ";
+   $res3 = mysqli_query($con, $sql3) or die(mysqli_error());
+}
+
+function boop()
+{
+   echo "boop";
+}
+
+function vote()
+{
+   echo "vote";
+}
+if( 
+    (!array_key_exists('updoot_submit',$_POST))
+    && 
+    (!array_key_exists('boop_submit',$_POST))
+){
+    vote();
+ }
+
+if(array_key_exists('updoot_submit',$_POST)){
+   updoot();
+}
+
+if(array_key_exists('boop_submit',$_POST)){
+    boop();
+ }
+
+?-->
 		</div>
+
+
+
 
 
 <!-- The Modal -->
@@ -119,6 +228,10 @@ $tid = $_GET['tid'];
 			</form>
 		</div>
 
+        
+
+
+
       </div>
 
     </div>
@@ -126,6 +239,9 @@ $tid = $_GET['tid'];
 </div>
 
 
+
+
+<script src="script.js" > </script>
 
 	</body>
 </html>

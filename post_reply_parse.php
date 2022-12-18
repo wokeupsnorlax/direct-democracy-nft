@@ -26,7 +26,7 @@ if(isset($_POST['reply_submit'])){
         //send email to ppl involved with topic
 
         if ( ($res) && ($res2) && ($res3) ) {
-            echo "<p>Reply successfully posted<a href='home.php'>Return to Index</a></p>";
+            echo "<p>Reply successfully posted | <a href='home.php'>Return to Index</a></p>";
         }else{
             echo "<p>There was a problem posting your reply, try again</p>";
         }
