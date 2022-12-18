@@ -27,7 +27,8 @@ if(isset($_POST['updoot_submit'])){
             //send email to ppl involved with topic
 
             if ( ($res3)) {
-                echo "<p>'".$rating_action."' successfully updated | <a href='home.php'>Return to Index</a></p>";
+                echo"<div class='text-center'><a href ='home.php' class='cat_links'><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+                echo "<p>'".$rating_action."' successfully updated</p>";
             }else{
                 echo "<p>There was a problem, try again</p>";
             }
@@ -37,7 +38,8 @@ if(isset($_POST['updoot_submit'])){
         $sql2 = "INSERT INTO rating_info (post_id, user_id, rating_action, rating_date) VALUES ('".$tid."', '".$creator."', '".$rating_action."', now() )  LIMIT 1";
             $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
             if ( ($res2)) {
-                echo "<p>'".$rating_action."' successfully posted | <a href='home.php'>Return to Index</a></p>";
+                echo"<div class='text-center'><a href ='home.php' class='cat_links'><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+                echo "<p>'".$rating_action."' successfully posted</p>";
             }else{
                 echo "<p>There was a problem, try again</p>";
             }

@@ -44,6 +44,7 @@ $tid = $_GET['tid'];
             $pid = "";
             $rating_action = "";
             $uid = $_SESSION['name'];
+            $current_rating_action = "not voted";
             
             $sql =  "SELECT * FROM topics WHERE category_id='".$cid."' AND id='".$tid."' LIMIT 1";
             $res = mysqli_query($con, $sql) or die(mysqli_error());
@@ -51,7 +52,7 @@ $tid = $_GET['tid'];
             if (mysqli_num_rows($res) == 1){
                 echo "<table width='100%'>";
                 if ($_SESSION['id']){
-                    echo "<tr><td colspan='2'><button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#replyModal'>Add Reply </button>";
+                    echo "<tr><td colspan='2'><button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#replyModal'>Add Reply </button>";
                 }else{
                     echo "<tr><td colspan='2'><p>Please login to add response</p></td></tr>";
                 }
@@ -69,35 +70,66 @@ $tid = $_GET['tid'];
                         $sql7 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='updoot'";
                         $result = mysqli_query($con, $sql7);
                         $row7 = mysqli_fetch_array($result);
-                        $total = $row7[0];
+                        $total7 = $row7[0];
 
                         $sql8 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='boop'";
                         $result = mysqli_query($con, $sql8);
                         $row8 = mysqli_fetch_array($result);
                         $total8 = $row8[0];
 
-                        echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> 
+                        $sql9 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."'";
+                        $result = mysqli_query($con, $sql9);
+                        $row9 = mysqli_fetch_array($result);
+                        $total9 = $row9[0];
                         
+                        if($total9 != 0){
+                            $total_updoot_perc =  round(($total7 / $total9) * 100,2);
+                            $total_boop_perc =  round(($total8 / $total9)* 100, 2);
+                        }
+                        
+                        if($total9 == 0){
+                            $total_updoot_perc =  0;
+                            $total_boop_perc =  0;
+                        }
+
+
+                        $sql33="SELECT rating_action FROM rating_info WHERE user_id='".$_SESSION['id']."' AND  post_id='".$row2['id']."'";
+                        $res33 = mysqli_query($con, $sql33) or die(mysqli_error());
+                        while($row33 = mysqli_fetch_assoc($res33)){
+
+                        
+                            $current_rating_action = $row33['rating_action'];
+                        
+
+                    }
+
+                        echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> 
+                        ".$current_rating_action."
+                        <hr /> 
+
+                        <div class='col-sm-6'>
                         <form action='update_updoots.php' method='post'>
                         
                         <input type='hidden' name='rating_action' value='updoot'/>
 
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
 
-                        <input type='submit' name='updoot_submit' id='updoot_submit' value='Up' />".$total."
+                        <button class='btn btn-success' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >Up</button> ".$total7."/".$total9." - ".$total_updoot_perc." %
                         
                         </form>
+                        </div>
 
+                        <div class='col-sm-6'>
                         <form action='update_updoots.php' method='post'>
                         
                         <input type='hidden' name='rating_action' value='boop'/>
 
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
 
-                        <input type='submit' name='updoot_submit' id='updoot_submit' value='Down' />".$total8."
+                        <button class='btn btn-danger' type='submit' name='updoot_submit' id='updoot_submit' value='Down'>Down</button>".$total8."/".$total9." - ".$total_boop_perc." % 
                         
                         </form>
-
+                        </div>
 
                         
                         
@@ -110,10 +142,6 @@ $tid = $_GET['tid'];
 
                        
 
-                        
-
-
-                        //echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> <button type='button' class='btn btn-success' >Up</button>".$row2['updoots']."<button type='button' class='btn btn-primary'>Down</button> ".$row2['boops']."</p></div></td></tr>";
                     }
                     $old_views = $row['topic_views'];
                     $new_views = $old_views + 1;
@@ -137,58 +165,6 @@ $tid = $_GET['tid'];
 
 			
 			
-        <!--?php
-
-function updoot()
-{
-   echo "updoot";
-
-
-   $sql8 =  "SELECT * FROM rating_info WHERE user_id='".$uid."' AND topic_id='".$tid."'" ;
-   $res8 = mysqli_query($con, $sql8) or die(mysqli_error());
-
-   $old_updoots = $row['topic_updoots'];
-   $new_updoots = $old_updoots + 1;
-
-
-   $sql2 =  "SELECT * FROM posts WHERE category_id='".$cid."' AND topic_id='".$tid."'" ;
-   $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
-
-
-
-
-   $old_views = $row['topic_views'];
-   $new_views = $old_views + 1;
-   $sql3 = "UPDATE topics SET topic_views='".$new_views."' WHERE category_id='".$cid."' AND id='".$tid."' ";
-   $res3 = mysqli_query($con, $sql3) or die(mysqli_error());
-}
-
-function boop()
-{
-   echo "boop";
-}
-
-function vote()
-{
-   echo "vote";
-}
-if( 
-    (!array_key_exists('updoot_submit',$_POST))
-    && 
-    (!array_key_exists('boop_submit',$_POST))
-){
-    vote();
- }
-
-if(array_key_exists('updoot_submit',$_POST)){
-   updoot();
-}
-
-if(array_key_exists('boop_submit',$_POST)){
-    boop();
- }
-
-?-->
 		</div>
 
 

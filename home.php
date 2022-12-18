@@ -30,9 +30,9 @@ if (!isset($_SESSION['loggedin'])) {
 		<div class="content">
 			<h2>Home</h2>
 			<p>Welcome back, <a href="profile.php"><?=$_SESSION['name']?></a>! Join a Sub and start a discussion!
-				<!--button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#catModal">
+				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#catModal">
     				Create Sub
-  				</button-->
+  				</button>
 
 				
 			</p>
@@ -80,20 +80,20 @@ if (!isset($_SESSION['loggedin'])) {
 
         <div class="post">
 			
-			<form action="post.php" method="post" autocomplete="off">
+			<form action="create_cat_parse.php" method="post" autocomplete="off">
            
                 <div class="mb-3 mt-3">
 				<p><a name="username" type="text" id="username" href="profile.php"><?=$_SESSION['name']?></a></p></div>
 
 
                 <div class="mb-3 mt-3">
-				<textarea class="form-control" rows="1" id="title" name="title" type="text"></textarea></div>
+				<textarea class="form-control" rows="1" id="catergory_title" name="catergory_title" type="text"></textarea></div>
 
                 <div class="mb-3 mt-3">
-				<textarea class="form-control" rows="5" id="comment" name="comment" type="text"></textarea></div>
+				<textarea class="form-control" rows="5" id="catergory_description" name="catergory_description" type="text"></textarea></div>
 
                 <div class="mb-3 mt-3">
-				<input type="submit" value="Post"></div>
+				<input type="submit" name="cat_submit" value="Post"></div>
                 
 			</form>
 		</div>
