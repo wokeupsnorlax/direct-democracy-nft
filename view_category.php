@@ -33,14 +33,15 @@ if (!isset($_SESSION['loggedin'])) {
 
 			<?php
 			mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-			$con = mysqli_connect('localhost', 'root', '', 'phplogin');
+            $config = parse_ini_file('db.ini');
+			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
             
             
             $cid = $_GET['cid'];
             if (!isset($_SESSION['loggedin'])) {
                 $logged = "Please log in to create topics in this forum";
             }else{
-                $logged = "<a href='create_topic.php?cid=".$cid."' class='cat_links'><button style='width:100%;'class='btn btn-success'>Create a topic!</button></a>";
+                $logged = "<a href='create_topic.php?cid=".$cid."' class=''><button style='width:100%;'class='btn btn-success'>Create a topic!</button></a>";
             }
 
             $sql =  "SELECT id FROM catergories WHERE id='".$cid."' LIMIT 1";
@@ -56,7 +57,7 @@ if (!isset($_SESSION['loggedin'])) {
                 
                 if (mysqli_num_rows($res2) > 0){
                     $topics .= "<table width='100%' style='border-collapse:collapse;'>";
-                    $topics .= "<tr><td colspan='3'><a href ='home.php' class='cat_links'><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a><hr />".$logged."</td></tr>";
+                    $topics .= "<tr><td colspan='3'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a><hr />".$logged."</td></tr>";
                     $topics .= "<tr style='background-color:#dddddd;'><td>Topic Title</td><td width='65' align='center'>Replies</td><td width='65' align='center'>Views</td></tr>";
                     $topics .= "<tr><td colspan='3'><hr /></td></tr>";
                     while($row = mysqli_fetch_assoc($res2)){
@@ -78,7 +79,7 @@ if (!isset($_SESSION['loggedin'])) {
                     echo $topics;
                 }else{
                     
-                    echo"<div class='text-center'><a href ='home.php' class='cat_links'><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+                    echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
                     echo"<h2 class='text-center'>There are no topics yet".$logged."</h2>";
                 }
 			} else {

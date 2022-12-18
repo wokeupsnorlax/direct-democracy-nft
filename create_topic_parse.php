@@ -2,7 +2,8 @@
 // We need to use sessions, so you should always start sessions using the below code.
 session_start();
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-		$con = mysqli_connect('localhost', 'root', '', 'phplogin');
+		$config = parse_ini_file('db.ini');
+			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
 // If the user is not logged in redirect to the login page...
 if (!isset($_SESSION['loggedin'])) {
 	header('Location: index.html');

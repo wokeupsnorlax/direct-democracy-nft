@@ -39,7 +39,8 @@ if (!isset($_SESSION['loggedin'])) {
 
 			<?php
 			mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-			$con = mysqli_connect('localhost', 'root', '', 'phplogin');
+			$config = parse_ini_file('db.ini');
+			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
 
 			$sql =  "SELECT * FROM catergories ORDER BY catergory_title ASC";
 			$res = mysqli_query($con, $sql) or die(mysqli_error());
@@ -49,7 +50,7 @@ if (!isset($_SESSION['loggedin'])) {
 					$id = $row['id'];
 					$title = $row['catergory_title'];
 					$description = $row['catergory_description'];
-					$categories .= "<div class='text-center'><a href ='view_category.php?cid=".$id."' class='cat_links'><button style='width:100%;'class='btn btn-success'><h1 >".$title."</h1><p>".$description."</p></button></a></div>";
+					$categories .= "<div class='text-center'><a href ='view_category.php?cid=".$id."' class=''><button style='width:100%;'class='btn btn-success'><h1 >".$title."</h1><p>".$description."</p></button></a></div>";
 				}
 				echo $categories;
 			} else {

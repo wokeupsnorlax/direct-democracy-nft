@@ -7,7 +7,8 @@ if (!isset($_SESSION['loggedin'])) {
     
 if(isset($_POST['updoot_submit'])){
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    $con = mysqli_connect('localhost', 'root', '', 'phplogin');
+    $config = parse_ini_file('db.ini');
+			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
         
     $creator = $_SESSION['id'];
     $tid = $_POST['tid'];
