@@ -1,6 +1,7 @@
 # direct-democracy-nft
 
-##Purpose: To create a Direct Democracy Forum
+## Purpose:  
+- To create a Direct Democracy Forum
 
 ## Working Functions So Far:
 - Create Subs;
@@ -12,12 +13,12 @@
 - Follow Replies Voted On;
 - Follow Replies Not Yet Voted On;
 
-Functions to do:
--Set "follow"/"ignore":
-  -Categories
-  -Users
-  -Topics
-  -Messages
+## Functions to do:
+- Set "follow"/"ignore":
+  - Categories
+  - Users
+  - Topics
+  - Messages
 -Delete Function
 -Show random "follows" in "Home" feed
   -Sort "Home" by Dropdown Options
