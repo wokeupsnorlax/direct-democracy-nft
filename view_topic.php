@@ -6,8 +6,24 @@ if (!isset($_SESSION['loggedin'])) {
 	header('Location: index.html');
 	exit;
 }
+include_once("connect.php");
+
+if (mysqli_connect_errno()) {
+	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+}
+// We don't have the password or email info stored in sessions so instead we can get the results from the database.
+$stmt = $con->prepare('SELECT email, username, id FROM accounts WHERE id = ?');
+// In this case we can use the account ID to get the account info.
+$stmt->bind_param('i', $_SESSION['id']);
+$stmt->execute();
+$stmt->bind_result($email,$username,$seshid);
+$stmt->fetch();
+$stmt->close();
+
 $cid = $_GET['cid'];
 $tid = $_GET['tid'];
+
+$uid = $_SESSION['id'];
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +31,7 @@ $tid = $_GET['tid'];
 	<head>
 		<meta charset="utf-8">
 		<title>Direct Democracy Communication</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 		<link href="style.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,62 +42,70 @@ $tid = $_GET['tid'];
 		<nav class="navtop">
 			<div>
 			<h1><a href="home.php">Direct Democracy Communication</a></h1>
-				<a href="profile.php"><i class="fas fa-user-circle"></i>Profile</a>
+				
+            <a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$username?></button></a>
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
 		</nav>
 		
 		<div class="content">
-			<h2>Topics</h2>
+			
 			
 
 			<?php
 			mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 			$config = parse_ini_file('db.ini');
-			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+			$con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+            $con->set_charset('utf8mb4'); // charset
             
             
             $cid = $_GET['cid'];
             $tid = $_GET['tid'];
             $pid = "";
             $rating_action = "";
-            $uid = $_SESSION['name'];
             $current_rating_action = "not voted";
             
             $sql =  "SELECT * FROM topics WHERE category_id='".$cid."' AND id='".$tid."' LIMIT 1";
             $res = mysqli_query($con, $sql) or die(mysqli_error());
 
+            $sql2 =  "SELECT * FROM posts WHERE category_id='".$cid."' AND topic_id='".$tid."'" ;
+            $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
+
+            
+
             if (mysqli_num_rows($res) == 1){
                 echo "<table width='100%'>";
                 if ($_SESSION['id']){
-                    echo "<tr><td colspan='2'><button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#replyModal'>Add Reply </button>";
+                    
+                //show reply button
+                    
+                    
                 }else{
                     echo "<tr><td colspan='2'><p>Please login to add response</p></td></tr>";
                 }
                 while($row = mysqli_fetch_assoc($res)){
-                    $sql2 =  "SELECT * FROM posts WHERE category_id='".$cid."' AND topic_id='".$tid."'" ;
-                    $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
-
-
                     
 
 
+                    echo "<h2><br/>".$row['topic_title']."</h2>";
+
+                    
                     
                     
                     while($row2 = mysqli_fetch_assoc($res2)){
                         $sql7 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='updoot'";
-                        $result = mysqli_query($con, $sql7);
-                        $row7 = mysqli_fetch_array($result);
+                        $result7 = mysqli_query($con, $sql7);
+                        $row7 = mysqli_fetch_array($result7);
                         $total7 = $row7[0];
 
                         $sql8 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."' AND rating_action='boop'";
-                        $result = mysqli_query($con, $sql8);
-                        $row8 = mysqli_fetch_array($result);
+                        $result8 = mysqli_query($con, $sql8);
+                        $row8 = mysqli_fetch_array($result8);
                         $total8 = $row8[0];
 
                         $sql9 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row2['id']."'";
-                        $result = mysqli_query($con, $sql9);
-                        $row9 = mysqli_fetch_array($result);
+                        $result9 = mysqli_query($con, $sql9);
+                        $row9 = mysqli_fetch_array($result9);
                         $total9 = $row9[0];
                         
                         if($total9 != 0){
@@ -94,49 +119,42 @@ $tid = $_GET['tid'];
                         }
 
 
-                        $sql33="SELECT rating_action FROM rating_info WHERE user_id='".$_SESSION['id']."' AND  post_id='".$row2['id']."'";
+                        $sql33="SELECT rating_action FROM rating_info WHERE user_id='".$_SESSION['id']."' AND  post_id='".$row2['id']."' LIMIT 1";
                         $res33 = mysqli_query($con, $sql33) or die(mysqli_error());
-                        while($row33 = mysqli_fetch_assoc($res33)){
+                        $row33 = mysqli_fetch_array($res33);
+                        if (($row33 =="" ) || ($row33 =="not voted" )){
+                            $current_rating_action ="not voted";
+                        }else{
+                            $current_rating_action = $row33[0];
+                        }
 
-                        
-                            $current_rating_action = $row33['rating_action'];
-                        
+                        $post_creator = $row2['post_creator'];
 
-                    }
-
-                        echo "<tr><td><p><div>".$row['topic_title']."<br /> by ".$row2['post_creator']." - ".$row2['post_date']."<hr />".$row2['post_content']."<hr /> 
-                        ".$current_rating_action."
-                        <hr /> 
-
-                        <div class='col-sm-6'>
-                        <form action='update_updoots.php' method='post'>
-                        
+    echo "<div class='row'>
+            <p>".$row2['post_content']."</p>
+            <p class='text-center'>by <a href='profile.php?uid=".$post_creator."'>".$post_creator."</a> - ".$row2['post_date']."</p>
+        <hr /><p class='text-center'>Your Current Vote On This Comment: ".$current_rating_action."</p>
+        <hr /> <div class='col-sm-6 text-center'>
+                    <form action='update_updoots.php' method='post'>
                         <input type='hidden' name='rating_action' value='updoot'/>
-
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
+                        <button class='btn btn-success' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >Up</button>
+                        <p>".$total7."/".$total9." - ".$total_updoot_perc." %</p>
+                    </form>
+                </div>
 
-                        <button class='btn btn-success' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >Up</button> ".$total7."/".$total9." - ".$total_updoot_perc." %
-                        
-                        </form>
-                        </div>
-
-                        <div class='col-sm-6'>
-                        <form action='update_updoots.php' method='post'>
+                <div class='col-sm-6 text-center'>
+                    <form action='update_updoots.php' method='post'>
                         
                         <input type='hidden' name='rating_action' value='boop'/>
 
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
 
-                        <button class='btn btn-danger' type='submit' name='updoot_submit' id='updoot_submit' value='Down'>Down</button>".$total8."/".$total9." - ".$total_boop_perc." % 
+                        <button class='btn btn-danger' type='submit' name='updoot_submit' id='updoot_submit' value='Down'>Down</button><p>".$total8."/".$total9." - ".$total_boop_perc." %</p>
                         
-                        </form>
-                        </div>
-
-                        
-                        
-
-                        
-                        </p></div></td></tr>";
+                    </form>
+                </div>
+        </div>";
 
 
                         
@@ -153,6 +171,7 @@ $tid = $_GET['tid'];
 
                     //if boop then boop
                 }
+                echo"<button type='button' style='width:100%' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#replyModal'>Add Reply </button>";
                 echo "</table>";
             }else{
                 echo "<p>This topic does not exist | <a href='home.php'>Return to Forum Index</1></p>";
@@ -191,7 +210,11 @@ $tid = $_GET['tid'];
 			<form action="post_reply_parse.php" method="post" autocomplete="off">
            
                 <div class="mb-3 mt-3">
-				<p><a name="username" type="text" id="username" href="profile.php"><?=$_SESSION['name']?></a></p></div>
+				<?php
+					
+				echo "<p><a name='username' type='text' id='username' href='profile.php?uid=".$uid."'>".$username."</a></p></div>";
+
+				?></div>
 
                 <div class="mb-3 mt-3">
 				<textarea class="form-control" rows="5" id="reply_content" name="reply_content" type="text"></textarea></div>
@@ -216,6 +239,45 @@ $tid = $_GET['tid'];
 </div>
 
 
+
+
+<!-- The Modal -->
+<div class="modal" id="profileModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Account Details</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+		<table>
+		 <tr>
+		  <td>Username ID:</td>
+		  <td><?=$_SESSION['id']?></td>
+		 </tr>
+		 <tr>
+		  <?php
+					
+		echo "<td>Username:</td>
+		  <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+	
+		?>
+		 </tr>
+		 <tr>
+		  <td>Email:</td>
+		  <td><?=$email?></td>
+		 </tr>
+		</table>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 <script src="script.js" > </script>

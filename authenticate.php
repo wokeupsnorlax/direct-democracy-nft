@@ -1,8 +1,7 @@
 <?php
 session_start();
 // Change this to your connection info.
-$config = parse_ini_file('db.ini');
-			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+include_once("connect.php");
 
 
 

@@ -8,7 +8,8 @@ if (!isset($_SESSION['loggedin'])) {
 if(isset($_POST['reply_submit'])){
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     $config = parse_ini_file('db.ini');
-			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+			$con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+            $con->set_charset('utf8mb4'); // charset
         
     $creator = $_SESSION['id'];
     $cid = $_POST['cid'];
@@ -25,6 +26,8 @@ if(isset($_POST['reply_submit'])){
         $res3 = mysqli_query($con, $sql3) or die(mysqli_error());
 
         //send email to ppl involved with topic
+        
+
 
         if ( ($res) && ($res2) && ($res3) ) {
             echo"<div class='text-center'><a href ='home.php' class='cat_links'><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";

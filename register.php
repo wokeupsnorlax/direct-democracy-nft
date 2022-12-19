@@ -1,7 +1,6 @@
 <?php
 // Change this to your connection info.
-$config = parse_ini_file('db.ini');
-			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+include_once("connect.php");
 
 if (mysqli_connect_errno()) {
 	// If there is an error with the connection, stop the script and display the error.

@@ -3,7 +3,8 @@
 session_start();
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 		$config = parse_ini_file('db.ini');
-			$con = mysqli_connect("localhost",$config['username'],$config['password'],$config['db']);
+			$con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+            $con->set_charset('utf8mb4'); // charset
 // If the user is not logged in redirect to the login page...
 if (!isset($_SESSION['loggedin'])) {
 	header('Location: index.html');
