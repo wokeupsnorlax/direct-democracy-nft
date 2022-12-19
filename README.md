@@ -1,10 +1,10 @@
 # direct-democracy-nft
 
-Purpose: To create a Direct Democracy Forum
+##Purpose: ###To create a Direct Democracy Forum
 
 ## Working Functions So Far:
--Create Subs;
--Create Topics in Subs;
+###-Create Subs;
+###-Create Topics in Subs;
 -Create Replies to Topics;
 -Upvote/Downvote Replies;
 -Message Users;
