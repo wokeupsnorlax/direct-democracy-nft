@@ -19,33 +19,32 @@
   - Users
   - Topics
   - Messages
--Delete Function
--Show random "follows" in "Home" feed
-  -Sort "Home" by Dropdown Options
-    -Dropdown Options:
-      -"recent"
-      -"first"
--Show "Suggested Subs"
--Show "Joined Subs"
--Create "Search" Bar for
-  -Categories
-  -Users
-  -Topics
-  -Replies
-  -Voted
-  -Not Voted Yet
-  -Messages
--Update/Show Message Notifications
--Upload Photos
-  -Profile
-    -Banner
-    -Pic
-  -Sub
-    -Banner
-    -Pic
-  -Topic
-    -Banner
--Connect to GS Wallet & Verify User owns NFT
--Let User modify their own data
+- Delete Function
+- Show random "follows" in "Home" feed
+- Sort "Home" by Dropdown Options
+  - "recent"
+  - "first"
+- Show "Suggested Subs"
+- Show "Joined Subs"
+- Create "Search" Bar for
+  - Categories
+  - Users
+  - Topics
+  - Replies
+  - Voted
+  - Not Voted Yet
+  - Messages
+- Update/Show Message Notifications
+- Upload Photos
+  - Profile
+    - Banner
+    - Pic
+  - Sub
+    - Banner
+    - Pic
+  - Topic
+    - Banner
+- Connect to GS Wallet & Verify User owns NFT
+- Let User modify their own data
 
 See "Roadmap" for a detailed outline of the project
