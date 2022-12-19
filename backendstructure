@@ -1,0 +1,110 @@
+Database Structure for back end(rework as needed):
+
+CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `activation_code` varchar(50) DEFAULT '',
+  `forum_notification` enum('0','1') NOT NULL DEFAULT '1',
+  `privs` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `catergories` (
+  `id` tinyint(4) NOT NULL,
+  `category_title` varchar(150) NOT NULL,
+  `category_description` varchar(255) NOT NULL,
+  `last_post_date` datetime DEFAULT NULL,
+  `last_user_posted` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `topics` (
+  `id` int(11) NOT NULL,
+  `category_id` tinyint(4) NOT NULL,
+  `topic_title` varchar(150) NOT NULL,
+  `topic_creator` int(11) NOT NULL,
+  `topic_last_user` int(11) DEFAULT NULL,
+  `topic_date` datetime NOT NULL,
+  `topic_reply_date` datetime NOT NULL,
+  `topic_views` int(11) NOT NULL DEFAULT 0,
+  `updoots` int(11) NOT NULL DEFAULT 0,
+  `boops` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL,
+  `category_id` tinyint(4) NOT NULL,
+  `topic_id` int(11) NOT NULL,
+  `post_creator` int(11) NOT NULL,
+  `post_content` text NOT NULL,
+  `post_date` datetime DEFAULT NULL,
+  `updoots` int(11) NOT NULL DEFAULT 0,
+  `boops` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `rating_info` (
+  `rating_action` varchar(20) NOT NULL,
+  `rating_date` datetime DEFAULT NULL,
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `dm` (
+  `message_content` varchar(255) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `from_id` int(11) NOT NULL,
+  `message_date` datetime NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `catergories`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `dm`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `rating_info`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `topics`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `accounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+
+ALTER TABLE `catergories`
+  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+
+ALTER TABLE `dm`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+
+ALTER TABLE `posts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+
+
+ALTER TABLE `rating_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+
+
+ALTER TABLE `topics`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+COMMIT;
