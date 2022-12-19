@@ -2,7 +2,7 @@
 
 Purpose: To create a Direct Democracy Forum
 
-Working Functions So Far:
+## Working Functions So Far:
 -Create Subs
 -Create Topics in Subs
 -Create Replies to Topics
