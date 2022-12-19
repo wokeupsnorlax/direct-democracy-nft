@@ -12,13 +12,15 @@ if (mysqli_connect_errno()) {
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
 // We don't have the password or email info stored in sessions so instead we can get the results from the database.
-$stmt = $con->prepare('SELECT email,username FROM accounts WHERE id = ?');
+$stmt = $con->prepare('SELECT email,username,id FROM accounts WHERE id = ?');
 // In this case we can use the account ID to get the account info.
 $stmt->bind_param('i', $_SESSION['id']);
 $stmt->execute();
-$stmt->bind_result($email,$username);
+$stmt->bind_result($email,$username,$seshid);
 $stmt->fetch();
 $stmt->close();
+
+$uid = $_GET['uid'];
 ?>
 
 <!DOCTYPE html>
@@ -41,9 +43,24 @@ $stmt->close();
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
 		</nav>
-		<div class="content container mt-3">
+		<div class="content container ">
 
-<h2>Profile Page</h2>
+<?php
+
+	$sql99 = "SELECT username FROM accounts WHERE id='".$uid."' ";
+	$res99 = mysqli_query($con, $sql99) or die(mysqli_error());
+	$row99 = mysqli_fetch_assoc($res99);
+	if ($row99 != "")
+	{
+		$prof_username = $row99['username'];
+	}else{
+		$prof_username = "MissingNo";
+	}
+
+	echo "<h2>$prof_username's Profile Page</h2>";
+	echo "<button class='btn btn-success' data-bs-toggle='modal' data-bs-target='#messageModal'>Send Message to $prof_username</button>";
+?>
+
 
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
@@ -56,13 +73,21 @@ $stmt->close();
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="tab" href="#posts">Comments</a>
     </li>
+	
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#votes">Voted</a>
+    </li>
+	
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#notvoted">Not Voted Yet</a>
+    </li>
   </ul>
 
   <div class="tab-content">
     <div id="topics" class="container tab-pane active">
 <?php
 	
-	$uid = $_GET['uid'];
+	
 	$topics ="";
 			
 	$sql3 = "SELECT * FROM topics WHERE topic_creator='".$uid."' ORDER BY topic_reply_date DESC ";
@@ -208,7 +233,204 @@ $stmt->close();
 				
 				
 			
-?></div></div>
+?></div>
+
+
+<div id="votes" class="container tab-pane fade">
+
+<?php
+	$uid = $_GET['uid'];
+	$votes ="";
+		
+	$sql888 = "SELECT * FROM rating_info WHERE user_id='".$uid."' ORDER BY rating_date DESC ";
+	$res888 = mysqli_query($con, $sql888) or die(mysqli_error());
+
+	if (mysqli_num_rows($res888) > 0){
+		
+		$votes .= "<table width='100%' style='border-collapse:collapse;'>";
+		$votes .= "<h2>Votes</h2>";
+		$votes .= "<tr style='background-color:#dddddd;'>
+		<td >Votes ".$uid." Cast</td>
+		<td width='200'>Topics ".$uid." Voted On</td>
+		<td width='100' align='center'>Vote Cast</td>
+		</tr>";
+		$votes .= "<tr><td colspan='6'><hr /></td></tr>";
+
+		while($row888 = mysqli_fetch_assoc($res888)){
+			$pid = $row888['post_id'];
+			$rating_action = $row888['rating_action'];
+			$rating_date = $row888['rating_date'];
+			$creator = $row888['user_id'];
+
+			
+			
+
+			$sql39 = "SELECT * FROM posts WHERE  id='".$pid."'";
+			$res39 = mysqli_query($con, $sql39) or die(mysqli_error());
+
+
+			while($row39 = mysqli_fetch_assoc($res39)){
+				$cid = $row39['category_id'];
+				$content = $row39['post_content'];
+				$tid = $row39['topic_id'];
+				$date = $row39['post_date'];
+
+				$sql40 = "SELECT * FROM topics WHERE  id='".$tid."'";
+				$res40 = mysqli_query($con, $sql40) or die(mysqli_error());
+
+				while($row40 = mysqli_fetch_assoc($res40)){
+					
+					$topic_date = $row40['topic_date'];
+					$topic_title = $row40['topic_title'];
+					$topic_creator = $row40['topic_creator'];
+					
+					
+				}
+				
+				$votes .= "<tr>";
+				$votes .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$content."</a>
+				<br /><span class='post_info'>Posted by: ".$creator." <br />on ".$date."</span></td>";
+			
+				$votes .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$topic_title."</a>
+				<br />
+				<span class='post_info'>Created by: <a href='profile.php?uid=".$topic_creator."'>".$topic_creator."</a><br/> on ".$topic_date."</span></td>";
+				
+				$votes .= "
+				<td align='center'>".$rating_action."</td>
+				";
+				$votes .= "
+			
+				</tr>";
+				$votes .= "<tr><td colspan='6'><hr/></td></tr>";
+				
+			}
+			
+
+		}
+		
+		$votes .= "</table>";
+		echo $votes;
+	}
+	else{
+                    
+		echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+		echo"<h2 class='text-center'>You haven't created a topic yet</h2>";
+	}
+
+	?>
+
+</div>
+
+<div id="notvoted" class="container tab-pane fade">
+
+<?php
+	$uid = $_GET['uid'];
+	$notvoted ="";
+		
+	$sql77 = "SELECT * FROM posts ORDER BY post_date DESC ";
+	$res77 = mysqli_query($con, $sql77) or die(mysqli_error());
+
+	if (mysqli_num_rows($res77) > 0){
+		
+		$notvoted .= "<table width='100%' style='border-collapse:collapse;'>";
+		$notvoted .= "<h2>Not Voted Yet</h2>";
+		$notvoted .= "<tr style='background-color:#dddddd;'>
+		<td >Posts ".$uid." Hasn't Voted On Yet</td>
+		<td width='200'>From Topic</td>
+		<td width='100' align='center'>Vote Cast</td>
+		</tr>";
+		$notvoted .= "<tr><td colspan='6'><hr /></td></tr>";
+
+		while($row77 = mysqli_fetch_assoc($res77)){
+			$pid = $row77['id'];
+			$creator = $row77['post_creator'];
+
+
+			
+
+
+
+			$sql33="SELECT rating_action FROM rating_info WHERE user_id='".$uid."' AND  post_id='".$pid."' LIMIT 1";
+			$res33 = mysqli_query($con, $sql33) or die(mysqli_error());
+			$row33 = mysqli_fetch_array($res33);
+			if (($row33 =="" ) || ($row33 =="not voted" )){
+
+				
+
+				$sql39 = "SELECT * FROM posts WHERE  id='".$pid."'";
+				$res39 = mysqli_query($con, $sql39) or die(mysqli_error());
+	
+	
+				while($row39 = mysqli_fetch_assoc($res39)){
+					$cid = $row39['category_id'];
+					$content = $row39['post_content'];
+					$tid = $row39['topic_id'];
+					$date = $row39['post_date'];
+	
+					$sql40 = "SELECT * FROM topics WHERE  id='".$tid."'";
+					$res40 = mysqli_query($con, $sql40) or die(mysqli_error());
+	
+					while($row40 = mysqli_fetch_assoc($res40)){
+						
+						$topic_date = $row40['topic_date'];
+						$topic_title = $row40['topic_title'];
+						$topic_creator = $row40['topic_creator'];
+						
+						
+					}
+					
+					
+					$notvoted .= "<tr>";
+					$notvoted .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$content."</a>
+					<br /><span class='post_info'>Posted by: ".$creator." <br />on ".$date."</span></td>";
+				
+					$notvoted .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$topic_title."</a>
+					<br />
+					<span class='post_info'>Created by: <a href='profile.php?uid=".$topic_creator."'>".$topic_creator."</a><br/> on ".$topic_date."</span></td>";
+					
+					$notvoted .= "
+					<td align='center'><div class='text-center'><a href ='view_topic.php?cid=".$cid."&tid=".$tid."' class=''><button style='width:100%;'class='btn btn-success'>Vote</button></a></div></td>";
+					
+					$notvoted .= "
+				
+					</tr>";
+					$notvoted .= "<tr><td colspan='6'><hr/></td></tr>";
+					
+				}
+
+			}else{
+				$rating_action = $row33[0];
+			}
+			
+            	
+
+
+            
+
+			
+			
+			
+			
+
+			
+			
+
+		}
+		
+		$notvoted .= "</table>";
+		echo $notvoted;
+	}
+	else{
+                    
+		echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+		echo"<h2 class='text-center'>You haven't created a topic yet</h2>";
+	}
+
+	?>
+
+</div>
+
+</div>
 
 
 
@@ -242,6 +464,8 @@ $stmt->close();
 		echo "<td>Username:</td>
 		  <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
 	
+
+		  
 		?>
 		 </tr>
 		 <tr>
@@ -256,6 +480,73 @@ $stmt->close();
   </div>
 </div>
 
+
+
+
+
+<!-- The Modal -->
+<div class="modal" id="messageModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Chat with <?=$prof_username?> and <?=$username?></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body text-center">
+		<div class="row">
+		<table>
+		 <tr>
+		  
+		  <?php
+				$messages = "<tr style='background-color:#dddddd;'><td>To/From/Date</td>
+				<td>Message</td></tr>";
+
+			$sql44 =  "SELECT * FROM dm WHERE to_id='".$uid."' AND from_id='".$seshid."'";
+			$res44 = mysqli_query($con, $sql44) or die(mysqli_error());
+
+		  echo"<tr><form action='create_message_parse.php' method='post' autocomplete='off'>
+		  	
+		  	<input type='hidden' name='to_id' value='".$uid."'/>
+		  	<input type='hidden' name='from_id' value='".$seshid."'/>
+
+		 	<div class='col'>
+		  		<textarea class='form-control' rows='3' id='message_content' name='message_content' type='text'></textarea>
+			</div>
+
+		  <div class=''>
+		  <input type='submit' name='dm_submit' value='Message'></div>
+		  
+	  		</form></tr>";
+			  
+while($row44 = mysqli_fetch_assoc($res44)){
+	$to_id = $row44['to_id'];
+	$from_id = $row44['from_id'];
+	$message_date = $row44['message_date'];
+	$message_content = $row44['message_content'];
+	$messages .= "<tr><td>To: ".$to_id." |
+	From: ".$from_id." <br/>on ".$message_date."</td>
+	<td>" .$message_content."</td></tr>
+	
+	";
+	
+}
+echo $messages ;
+
+	  //show each message between users
+		?>
+		
+		 </tr>
+		</table>
+
+      </div></div>
+
+    </div>
+  </div>
+</div>
 			
 	</body>
 </html>
