@@ -37,17 +37,19 @@ $uid = $_SESSION['id'];
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
-			<h1><a href="home.php">Direct Democracy Communication</a></h1>
+			<h1>
+					<a href="home.php"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal"><i class='far fa-bookmark'></i> | Subs</button></a>
+				</h1>
 				
             <a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$username?></button></a>
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
 		</nav>
 		
-		<div class="content">
+		<div class="content bg-white">
 			
 			
 
@@ -62,7 +64,7 @@ $uid = $_SESSION['id'];
             if (!isset($_SESSION['loggedin'])) {
                 $logged = "Please log in to create topics in this forum";
             }else{
-                $logged = "<a href='create_topic.php?cid=".$cid."' class=''><button style='width:100%;'class='btn btn-success'>Create a topic!</button></a>";
+                $logged = "<a href='create_topic.php?cid=".$cid."' class=''><button style='width:100%;'class='btn btn-warning text-white'>Create a <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic!</span></button></a>";
             }
 
             $sql =  "SELECT id FROM catergories WHERE id='".$cid."' LIMIT 1";
@@ -78,8 +80,8 @@ $uid = $_SESSION['id'];
                 
                 if (mysqli_num_rows($res2) > 0){
                     $topics .= "<table width='100%' style='border-collapse:collapse;'>";
-                    $topics .= "<tr><td colspan='3'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a><hr />".$logged."</td></tr>";
-                    $topics .= "<tr style='background-color:#dddddd;'><td>Topic Title</td><td width='65' align='center'>Replies</td><td width='65' align='center'>Views</td></tr>";
+                    $topics .= "<tr><td colspan='3'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-dark'>Return to <span class='badge bg-primary'><i class='far fa-bookmark'></i> | Sub</span> Index</button></a><hr />".$logged."</td></tr>";
+                    $topics .= "<tr style='background-color:#dddddd;'><td><span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span> Title</td><td width='65' align='center'><span class='badge bg-primary'><i class='far fa-comments'></i> | Comments</span></td><td width='65' align='center'><span class='badge bg-success'><i class='fas fa-eye'></i> | Views</span></td></tr>";
                     $topics .= "<tr><td colspan='3'><hr /></td></tr>";
                     while($row = mysqli_fetch_assoc($res2)){
                         $tid = $row['id'];
@@ -93,18 +95,35 @@ $uid = $_SESSION['id'];
                         $row = mysqli_fetch_array($result);
                         $total = $row[0];
 
-                        $topics .= "<tr><td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$title."</a><br /><span class='post_info'>Posted by: <a href='profile.php?uid=".$creator."'>".$creator."</a> on ".$date."</span></td><td align='center'>".$total."</td><td align='center'>".$views."</td></tr>";
+                        $stmt555 = $con->prepare('SELECT username,id FROM users WHERE id = ?');
+						// In this case we can use the account ID to get the account info.
+						$stmt555->bind_param('i', $creator);
+						$stmt555->execute();
+						$stmt555->bind_result($topic_creator_username,$user_id);
+						$stmt555->fetch();
+						$stmt555->close();
+
+						if((!$topic_creator_username)){
+							$topic_creator_username ='MissingNo';
+						}
+
+                        $topics .= "<tr>
+                            <td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'><span class='badge bg-primary'><i class='fas fa-book-open'></i> | ".$title."</span></a>
+                            <br /><span class='post_info'>Posted by: <a href='profile.php?uid=".$creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$topic_creator_username."</span></a> on ".$date."</span>
+                            </td>
+                            <td align='center'>".$total."</td><td align='center'>".$views."</td>
+                        </tr>";
                         $topics .= "<tr><td colspan='3'></td></tr>";
                     }
                     $topics .= "</table>";
                     echo $topics;
                 }else{
                     
-                    echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-                    echo"<h2 class='text-center'>There are no topics yet".$logged."</h2>";
+                    echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-dark'>Return to Sub Index</button></a></div>";
+                    echo"<div class='text-center'><h2 class='text-center'>There are no topics yet".$logged."</h2></div>";
                 }
 			} else {
-				echo"<p><a href='home.php'>Return to Forum Index</1></p>";
+				echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-dark'>Return to Sub Index</button></a></div>";
 			}
 			?>
 
@@ -119,7 +138,7 @@ $uid = $_SESSION['id'];
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -137,7 +156,7 @@ $uid = $_SESSION['id'];
 		 <tr><?php
 					
                     echo "<td>Username:</td>
-                      <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+                      <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
                 
                     ?>
 		 </tr>

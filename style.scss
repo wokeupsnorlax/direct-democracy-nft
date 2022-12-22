@@ -1,0 +1,35 @@
+
+
+
+
+// Then add additional custom code here
+
+$white: #ffffff;
+
+
+
+
+$light:      #3c1669;
+$dark:       #221d32;
+$primary:    #bfb5ad;
+$secondary:  #bb6266;
+$info:       #5e60a9;
+$success:    #66ae44;
+$warning:    #fbc573;
+$danger:     #f02764;
+
+$theme-colors: (
+    "light":      $light,
+    "dark":       $dark,
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "info":       $info,
+    "success":    $success,
+    "warning":    $warning,
+    "danger":     $danger,
+);
+
+@import "bootstrap-5.2.3-dist/scss/bootstrap";
+
+@import "bootstrap-5.2.3-dist/scss/variables";
+

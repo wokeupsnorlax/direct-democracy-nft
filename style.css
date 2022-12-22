@@ -1,3 +1,15 @@
+.light{background-color:      #3c1669;}
+.dark{background-color:       #221d32;}
+.primary{background-color:    #bfb5ad;}
+.secondary{background-color:  #bb6266;}
+.info{background-color:       #5e60a9;}
+.success{background-color:    #66ae44;}
+.warning{background-color:    #fbc573;}
+.danger{background-color:     #f02764;}
+
+
+
+
 * {
   	box-sizing: border-box;
   	font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
@@ -192,4 +204,3 @@ body.loggedin {
 	background-color: #2868c7;
   	transition: background-color 0.2s;
 }
-

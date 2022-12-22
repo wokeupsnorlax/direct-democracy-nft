@@ -1,21 +1,12 @@
 <?php
 session_start();
-// Change this to your connection info.
 include_once("connect.php");
-
-
-
-if ( mysqli_connect_errno() ) {
-	// If there is an error with the connection, stop the script and display the error.
-	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
-}
 
 // Now we check if the data from the login form was submitted, isset() will check if the data exists.
 if ( !isset($_POST['username'], $_POST['password']) ) {
 	// Could not get the data that should have been sent.
 	exit('Please fill both the username and password fields!');
 }
-
 
 // Prepare our SQL, preparing the SQL statement will prevent SQL injection.
 if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?')) {
@@ -40,14 +31,12 @@ if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?'
 		header('Location: home.php');
 	} else {
 		// Incorrect password
-		echo 'Incorrect username and/or password!';
+		echo "Incorrect username and/or password! <a href='index.html'>Back</a>";
 	}
 } else {
 	// Incorrect username
-	echo 'Incorrect username and/or password!';
+	echo "Incorrect username and/or password! <a href='index.html'>Back</a>";
 }
-
-
 	$stmt->close();
 }
 ?>

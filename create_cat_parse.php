@@ -33,7 +33,7 @@ $stmt->close();
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
 				<h1><a href="home.php">Direct Democracy Communication</a></h1>
@@ -48,19 +48,20 @@ $stmt->close();
 
 
 if(isset($_POST['cat_submit'])){
-    if (($_POST['catergory_title'] =="") && ($_POST['catergory_description'] =="")){
-        echo "Fill out both fields";
+    if (($_POST['category_title'] =="") || ($_POST['category_description'] =="")){
+        echo "<div class='text-center bg-secondary text-white'><p>Fill out both fields</p></div>";
+        header("Refresh: 1; url=home.php");
         exit();
     }else{
         
 
        
-        $title = $_POST['catergory_title'];
-        $content = $_POST['catergory_description'];
+        $title = $_POST['category_title'];
+        $content = $_POST['category_description'];
         $creator = $_SESSION['id'];
 
 
-		$sql =  "INSERT INTO catergories (catergory_title, catergory_description, last_user_posted, last_post_date) VALUES ('".$title."', '".$content."', '".$creator."', now())";
+		$sql =  "INSERT INTO catergories (category_title, category_description, last_user_posted, last_post_date) VALUES ('".$title."', '".$content."', '".$creator."', now())";
 		$res = mysqli_query($con, $sql) or die(mysqli_error());
 		$new_cat_id = mysqli_insert_id($con);
         
@@ -69,7 +70,8 @@ if(isset($_POST['cat_submit'])){
         if (($res)){
             header("Location: home.php");
         }else{
-            echo "Error, try again.";
+            echo "<div class='text-center bg-secondary text-white'><p>Error, try again.</p></div>";
+            header("Refresh: 1; url=home.php");
         }
         
     }
@@ -80,7 +82,7 @@ if(isset($_POST['cat_submit'])){
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -99,7 +101,7 @@ if(isset($_POST['cat_submit'])){
 		  <?php
 					
 		echo "<td>Username:</td>
-		  <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+		  <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
 	
 		?>
 		 </tr>

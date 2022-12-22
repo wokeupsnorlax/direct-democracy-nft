@@ -38,7 +38,7 @@ $uid = $_SESSION['id'];
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
 			<h1><a href="home.php">Direct Democracy Communication</a></h1>
@@ -48,12 +48,12 @@ $uid = $_SESSION['id'];
 		</nav>
 		
 		<div class="content">
-			<h2>Create a Topic</h2>
+			<h2 class='text-white'>Create a <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span></h2>
 
             <?php
 				
-                echo "<p>Welcome back, <a href='profile.php?uid=".$uid."'>".$username."</a>! Join a Sub and start a discussion!
-                <button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#postModal'>Post  				</button></p>";
+                echo "<p>Welcome back, <a href='profile.php?uid=".$uid."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$username."</span></a>! Create a Topic and start a discussion!
+                <button type='button' class='btn btn-warning text-white' data-bs-toggle='modal' data-bs-target='#postModal'>Create <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span></button></p>";
     
                 ?>
 
@@ -71,7 +71,7 @@ $uid = $_SESSION['id'];
 <!-- The Modal -->
 <div class="modal" id="postModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content text-white bg-secondary">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -80,7 +80,7 @@ $uid = $_SESSION['id'];
       </div>
 
       <!-- Modal body -->
-      <div class="modal-body text-center">
+      <div class="modal-body text-center text-white">
 
         <div class="post">
 			
@@ -89,7 +89,7 @@ $uid = $_SESSION['id'];
                 <div class="mb-3 mt-3">
 				<?php
 					
-				echo "<p><a name='username' type='text' id='username' href='profile.php?uid=".$uid."'>".$username."</a></p></div>";
+				echo "<p><a name='username' type='text' id='username' href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></p></div>";
 
 				?></div>
 
@@ -103,7 +103,7 @@ $uid = $_SESSION['id'];
 
                 <div class="mb-3 mt-3">
                 <input type="hidden" name="cid" value="<?php echo $cid; ?>"/>
-				<input type="submit" name="topic_submit" value="Post"></div>
+				<button class="btn btn-warning text-white"type="submit" name="topic_submit" value="Post">Post</button></div>
                 
 			</form>
 		</div>
@@ -119,7 +119,7 @@ $uid = $_SESSION['id'];
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -137,7 +137,7 @@ $uid = $_SESSION['id'];
 		 <tr><?php
 					
                     echo "<td>Username:</td>
-                      <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+                      <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
                 
                     ?>
 		 </tr>

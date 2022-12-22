@@ -1,0 +1,92 @@
+?cid=".$cid."&tid=".$tid."
+
+<span class='badge bg-info'><i class='fas fa-user-circle'></i> | 
+
+
+
+</span>
+
+
+href='profile.php?uid=".$topic_creator."'
+
+
+<!-- The Modal -->
+<div class="modal" id="profileModal">
+  <div class="modal-dialog">
+    <div class="modal-content bg-secondary text-white">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Account Details</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+		<table>
+		 <tr>
+		  <td>Username ID:</td>
+		  <td><?=$_SESSION['id']?></td>
+		 </tr>
+		 <tr>
+		 <?php
+					
+		echo "<td>Username:</td>
+		  <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
+	
+		?>
+		  
+		 </tr>
+		 <tr>
+		  <td>Email:</td>
+		  <td><?=$email?></td>
+		 </tr>
+		</table>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<span class='badge bg-primary'><i class='far fa-bookmark'></i> | Subs</span>
+<span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topics</span>
+<span class='badge bg-primary'><i class='far fa-comments'></i> | Comments</span>
+
+<span class='badge bg-success'><i class='fas fa-balance-scale'></i> | Voted</span>
+<span class='badge bg-danger'><i class='fas fa-balance-scale-right'></i> | Not Voted Yet</span>
+
+
+<span class='badge bg-dark'><i class='far fa-comment-alt'></i> | DMs</span>
+
+<span class='badge bg-success'><i class='fas fa-angle-up'></i> | Updoots</span>
+<span class='badge bg-danger'><i class='fas fa-angle-down'></i> | Boops</span>
+
+
+<span class='badge bg-success'><i class='fas fa-eye'></i> | Views</span>
+
+
+								<table>
+								  <tbody>
+									<tr>
+									  <td class='align-middle'><p><i class='far fa-comments text-white'></i></p></td>
+									  <td class='align-middle'><p>".$content."</p></td>
+									</tr>
+								  </tbody>
+								</table>
+
+
+
+								fas fa-crosshairs
+
+								fas fa-desktop
+
+
+
+
+
+								fas fa-edit

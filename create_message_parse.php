@@ -20,7 +20,7 @@ $stmt->bind_result($email,$username);
 $stmt->fetch();
 $stmt->close();
 
-//$uid = $_GET['uid'];
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,7 +33,7 @@ $stmt->close();
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
 				<h1><a href="home.php">Direct Democracy Communication</a></h1>
@@ -48,10 +48,13 @@ $stmt->close();
 
     
 if(isset($_POST['dm_submit'])){
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    $config = parse_ini_file('db.ini');
-			$con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
-            $con->set_charset('utf8mb4'); // charset
+
+
+    if ($_POST['message_content'] =="") {
+        echo "<p>Fill out a Message</p>";
+        exit();
+    }else{
+        
         
     $from_id = $_SESSION['id'];
     $to_id = $_POST['to_id'];
@@ -65,17 +68,19 @@ if(isset($_POST['dm_submit'])){
 
 
         if ( ($res)  ) {
-            echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-            echo "<p>Message successfully posted</p>";
+            echo"<div class='text-center bg-secondary text-white'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+            echo "<div class='text-center bg-secondary text-white'><p>Message successfully posted</p></div>";
+            header("Refresh: 1; url=home.php");
         }else{
-            echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-            echo "<p>There was a problem posting your message, try again</p>";
+            echo"<div class='text-center bg-secondary text-white'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+            echo "<div class='text-center bg-secondary text-white'><p>There was a problem posting your message, try again</p></div>";
+            header("Refresh: 1; url=home.php");
         }
-    }else{
+    
+
+}}else{
         exit();
     }
-
-
 
 ?></div>	
 
@@ -83,7 +88,7 @@ if(isset($_POST['dm_submit'])){
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -102,7 +107,7 @@ if(isset($_POST['dm_submit'])){
 		  <?php
 					
 		echo "<td>Username:</td>
-		  <td><a href='profile.php?uid=".$from_id."'>".$username."</a></td>";
+		  <td><a href='profile.php?uid=".$from_id."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
 	
 		?>
 		 </tr>

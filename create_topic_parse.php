@@ -33,7 +33,7 @@ $stmt->close();
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
 				<h1><a href="home.php">Direct Democracy Communication</a></h1>
@@ -84,7 +84,7 @@ if(isset($_POST['topic_submit'])){
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -103,7 +103,7 @@ if(isset($_POST['topic_submit'])){
 		  <?php
 					
 		echo "<td>Username:</td>
-		  <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+		  <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
 	
 		?>
 		 </tr>

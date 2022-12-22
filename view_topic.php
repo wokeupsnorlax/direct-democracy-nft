@@ -38,10 +38,12 @@ $uid = $_SESSION['id'];
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js" integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	</head>
-	<body class="loggedin">
+	<body class="loggedin bg-dark">
 		<nav class="navtop">
 			<div>
-			<h1><a href="home.php">Direct Democracy Communication</a></h1>
+			<h1>
+					<a href="home.php"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal"><i class='far fa-bookmark'></i> | Subs</button></a>
+				</h1>
 				
             <a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$username?></button></a>
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
@@ -87,7 +89,7 @@ $uid = $_SESSION['id'];
                     
 
 
-                    echo "<h2><br/>".$row['topic_title']."</h2>";
+                    echo "<h2 class='text-light'><br/><span class='badge bg-primary'><i class='fas fa-book-open'></i> | ".$row['topic_title']."</span></h2>";
 
                     
                     
@@ -118,8 +120,8 @@ $uid = $_SESSION['id'];
                             $total_boop_perc =  0;
                         }
 
-
-                        $sql33="SELECT rating_action FROM rating_info WHERE user_id='".$_SESSION['id']."' AND  post_id='".$row2['id']."' LIMIT 1";
+                        $post_id=$row2['id'];
+                        $sql33="SELECT rating_action FROM rating_info WHERE user_id='".$_SESSION['id']."' AND  post_id='".$post_id."' LIMIT 1";
                         $res33 = mysqli_query($con, $sql33) or die(mysqli_error());
                         $row33 = mysqli_fetch_array($res33);
                         if (($row33 =="" ) || ($row33 =="not voted" )){
@@ -128,17 +130,36 @@ $uid = $_SESSION['id'];
                             $current_rating_action = $row33[0];
                         }
 
+
+
+                        
+
+
                         $post_creator = $row2['post_creator'];
 
-    echo "<div class='row'>
+                        $stmt666 = $con->prepare('SELECT username,id FROM users WHERE id = ?');
+						// In this case we can use the account ID to get the account info.
+						$stmt666->bind_param('i', $post_creator);
+						$stmt666->execute();
+						$stmt666->bind_result($post_creator_username,$user_id);
+						$stmt666->fetch();
+						$stmt666->close();
+
+						if((!$post_creator_username)){
+							$post_creator_username ='MissingNo';
+						}
+
+
+
+    echo "<div class='row bg-secondary text-white'>
             <p>".$row2['post_content']."</p>
-            <p class='text-center'>by <a href='profile.php?uid=".$post_creator."'>".$post_creator."</a> - ".$row2['post_date']."</p>
+            <p class='text-center'>by <a href='profile.php?uid=".$post_creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> - ".$post_creator_username."</span></a> - ".$row2['post_date']."</p>
         <hr /><p class='text-center'>Your Current Vote On This Comment: ".$current_rating_action."</p>
         <hr /> <div class='col-sm-6 text-center'>
                     <form action='update_updoots.php' method='post'>
                         <input type='hidden' name='rating_action' value='updoot'/>
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
-                        <button class='btn btn-success' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >Up</button>
+                        <button class='btn btn-success' type='submit' name='updoot_submit' id='updoot_submit' value='Up' ><i class='fas fa-angle-up'></i></button>
                         <p>".$total7."/".$total9." - ".$total_updoot_perc." %</p>
                     </form>
                 </div>
@@ -150,7 +171,7 @@ $uid = $_SESSION['id'];
 
                         <input type='hidden' name='tid' value='".$row2['id']."'/>
 
-                        <button class='btn btn-danger' type='submit' name='updoot_submit' id='updoot_submit' value='Down'>Down</button><p>".$total8."/".$total9." - ".$total_boop_perc." %</p>
+                        <button class='btn btn-danger' type='submit' name='updoot_submit' id='updoot_submit' value='Down'><i class='fas fa-angle-down'></i></button><p>".$total8."/".$total9." - ".$total_boop_perc." %</p>
                         
                     </form>
                 </div>
@@ -194,10 +215,10 @@ $uid = $_SESSION['id'];
 <!-- The Modal -->
 <div class="modal" id="replyModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary">
 
       <!-- Modal Header -->
-      <div class="modal-header">
+      <div class="modal-header text-white">
         <h4 class="modal-title">Reply</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -212,7 +233,7 @@ $uid = $_SESSION['id'];
                 <div class="mb-3 mt-3">
 				<?php
 					
-				echo "<p><a name='username' type='text' id='username' href='profile.php?uid=".$uid."'>".$username."</a></p></div>";
+				echo "<p><a name='username' type='text' id='username' href='profile.php?uid=".$uid."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$username."</span></a></p></div>";
 
 				?></div>
 
@@ -223,7 +244,7 @@ $uid = $_SESSION['id'];
                 <div class="mb-3 mt-3">
                 <input type="hidden" name="cid" value="<?php echo $cid; ?>"/>
                 <input type="hidden" name="tid" value="<?php echo $tid; ?>"/>
-				<input type="submit" name="reply_submit" value="Post"></div>
+				<button class="btn btn-warning text-white" type="submit" name="reply_submit" value="Post">Reply</button></div>
                 
 			</form>
 		</div>
@@ -244,7 +265,7 @@ $uid = $_SESSION['id'];
 <!-- The Modal -->
 <div class="modal" id="profileModal">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content bg-secondary text-white">
 
       <!-- Modal Header -->
       <div class="modal-header">
@@ -263,7 +284,7 @@ $uid = $_SESSION['id'];
 		  <?php
 					
 		echo "<td>Username:</td>
-		  <td><a href='profile.php?uid=".$uid."'>".$username."</a></td>";
+		  <td><a href='profile.php?uid=".$uid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."</span></a></td>";
 	
 		?>
 		 </tr>
@@ -278,7 +299,47 @@ $uid = $_SESSION['id'];
     </div>
   </div>
 </div>
+<?php
 
+    
+if(isset($_POST['reply_submit'])){
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $config = parse_ini_file('db.ini');
+			$con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+            $con->set_charset('utf8mb4'); // charset
+        
+    $creator = $_SESSION['id'];
+    $cid = $_POST['cid'];
+    $tid = $_POST['tid'];
+    $reply_content = $_POST['reply_content'];
+
+    $sql = "INSERT INTO posts (category_id, topic_id, post_creator, post_content, post_date) VALUES ('".$cid."', '".$tid."', '".$creator."', '".$reply_content."', now() )";
+    $res = mysqli_query($con, $sql) or die(mysqli_error());
+
+        $sql2 = "UPDATE catergories SET last_post_date=now(), last_user_posted='".$creator."' WHERE id='".$cid."' LIMIT 1";
+        $res2 = mysqli_query($con, $sql2) or die(mysqli_error());
+
+        $sql3 = "UPDATE topics SET topic_reply_date=now(), topic_last_user='".$creator."' WHERE id='".$tid."' LIMIT 1";
+        $res3 = mysqli_query($con, $sql3) or die(mysqli_error());
+
+        //send email to ppl involved with topic
+        
+
+
+        if ( ($res) && ($res2) && ($res3) ) {
+            echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+            echo "<p>Reply successfully posted</p>";
+        }else{
+            echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
+            echo "<p>There was a problem posting your reply, try again</p>";
+        }
+    }else{
+        exit();
+    }
+
+
+
+?>
 
 <script src="script.js" > </script>
 
