@@ -164,10 +164,10 @@ $uid = $_GET['uid'];
 					<li class="nav-item "><a class="nav-link " data-bs-toggle="pill" href="#topics"><button class="btn btn-primary text-white"><i class='fas fa-book-open'></i> | Topics</button></a></li>
 					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#posts"><button class="btn btn-primary text-white"><i class='far fa-comments'></i> | Comments</button></a></li>
 					
-					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#oldposts"><button class="btn btn-primary text-white"><i class='far fa-comments'></i> | OLD Comments</button></a></li>
 
 					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#votes"><button class="btn btn-success"><i class='fas fa-balance-scale'></i> | Voted</button></a></li>
-					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#oldvotes"><button class="btn btn-success"><i class='fas fa-balance-scale'></i> | OLD Voted</button></a></li>
+
+
 					<li class="nav-item"><a class="nav-link active" data-bs-toggle="pill" href="#notvoted"><button class="btn btn-danger"><i class='fas fa-biohazard'></i> | Not Voted Yet</button></a></li>
 					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#messagefrom"><button class="btn btn-dark text-white"><i class='far fa-comment-alt'></i> | DMs From <span class="badge bg-info"><i class="fas fa-user-circle"></i> | <?=$prof_username?></span></button></a></li>
 					<li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#messageto"><button class="btn btn-dark text-white"><i class='far fa-comment-alt'></i> | DMs To <span class="badge bg-info"><i class="fas fa-user-circle"></i> | <?=$prof_username?></button></span></a></li>
@@ -301,91 +301,89 @@ $uid = $_GET['uid'];
 					?>
 				</div>
 
-				<div id="posts" class="container tab-pane fade bg-secondary">
-					<?php
-						$prof_posts ="";
-						
-						//Get posts table info from database
-						$stmt_prof_posts = $con->prepare('SELECT id,category_id,post_content,post_date,topic_id,post_creator FROM posts WHERE post_creator = '.$prof_id.' ORDER BY post_date DESC');
-						$stmt_prof_posts->execute();
-						$stmt_prof_posts->store_result();
-						$stmt_prof_posts->bind_result($pid,$cid,$p_content,$p_date,$p_tid,$post_creator );
+<div id="posts" class="container tab-pane fade bg-secondary">
+	<?php
+		$prof_posts ="";
+		//SELECT * FROM posts WHERE post_creator = profile id
+		$stmt_prof_posts = $con->prepare('SELECT id,category_id,post_content,post_date,topic_id,post_creator FROM posts WHERE post_creator = '.$prof_id.' ORDER BY post_date DESC');
+		$stmt_prof_posts->execute();$stmt_prof_posts->store_result();
+		$stmt_prof_posts->bind_result($pid_posts,$cid_posts,$p_content_posts,$p_date_posts,$p_tid_posts,$post_creator_posts );
 
-						//if there are posts created by this user then show this stuff
-						if ($stmt_prof_posts->num_rows > 0) {
-
-							//POSTS Header HTML
-							$prof_posts .= "
-							<div class='text-center'width='100% container' style='border-collapse:collapse;'>
-								<div class='row text-center'>
-									<div class='col'>	
-										<h2 class='text-white'>
-											<span class='badge bg-primary'>
-												<i class='far fa-comments'></i>
-												| Comments
-											</span>
-											<i class='fas fa-edit'></i> by:
-											<span class='badge bg-dark'>
-												<i class='fas fa-user-circle'></i>
-												| ".$prof_username."
-											</span>
-										</h2>
-									</div>
-								</div>
-							";
-
-							while(($row_prof_posts = $stmt_prof_posts->fetch()) ){
+		//if there are posts WHERE post_creator = profile id
+		if ($stmt_prof_posts->num_rows > 0) {
+			//POSTS Header HTML
+			$prof_posts .= "
+			<div class='text-center'width='100% container' style='border-collapse:collapse;'>
+				<div class='row text-center'>
+					<div class='col'>	
+						<h2 class='text-white'>
+							<span class='badge bg-primary'>
+								<i class='far fa-comments'></i>
+								| Comments
+							</span>
+							<i class='fas fa-edit'></i> by:
+							<span class='badge bg-dark'>
+								<i class='fas fa-user-circle'></i>
+								| ".$prof_username."
+							</span>
+						</h2>
+					</div>
+				</div>
+			";
+			//show the posts WHERE post_creator = profile id loop
+			while(($row_prof_posts = $stmt_prof_posts->fetch()) ){	
+				
+				//SELECT * FROM categories WHERE category_id = cid_posts
+				$stmt_prof_posts_cats = $con->prepare(
+					'SELECT id,category_title,category_description,last_user_posted,last_post_date 
+					FROM catergories 
+					WHERE id = '.$cid_posts.'');
+				$stmt_prof_posts_cats->execute();$stmt_prof_posts_cats->store_result();
+				$stmt_prof_posts_cats->bind_result($p_cid_posts,$p_c_title_posts,$p_c_description_posts,$p_c_last_user_posted_posts,$p_c_last_post_date_posts);
+				
+				//show the posts WHERE category_id = cid_posts id loop
+				while(($row_prof_posts_cats =$stmt_prof_posts_cats->fetch()) ){
 								
-								
-								$stmt_prof_posts_cats = $con->prepare(
-									'SELECT id,category_title,category_description,last_user_posted,last_post_date 
-									FROM catergories 
-									WHERE id = '.$cid.'');
-								$stmt_prof_posts_cats->execute();
-								$stmt_prof_posts_cats->store_result();
-								$stmt_prof_posts_cats->bind_result($p_cid,$p_c_title,$p_c_description,$p_c_last_user_posted,$p_c_last_post_date);
+					//SELECT * FROM topics WHERE topic_creator = cid_posts
+					$stmt_prof_posts_tops = $con->prepare('SELECT category_id,topic_title,topic_date,topic_creator,topic_views FROM topics WHERE topic_creator = '.$prof_id.'');
+					$stmt_prof_posts_tops->execute();$stmt_prof_posts_tops->store_result();
+					$stmt_prof_posts_tops->bind_result($t_cid_posts,$t_title_posts,$t_date_posts,$t_tid_posts,$t_views_posts);
+					$stmt_prof_posts_tops->fetch();
 
-								while(($row_prof_posts_cats =$stmt_prof_posts_cats->fetch()) ){
-								
-								//Get topics table info from database
-								$stmt_prof_posts_tops = $con->prepare('SELECT category_id,topic_title,topic_date,topic_creator,topic_views FROM topics WHERE topic_creator = '.$cid.'');
-								$stmt_prof_posts_tops->execute();
-								$stmt_prof_posts_tops->store_result();
-								$stmt_prof_posts_tops->bind_result($t_cid,$t_title,$t_date,$t_tid,$t_views);
-								$stmt_prof_posts_tops->fetch();
-
-								
-								if (!$p_c_description){
-									$t_c_description = "MissingDesc";
-								}
-								if (!$p_c_title){
-									$t_c_title = "MissingCat";
-								}
-								if (!$p_cid){
-									$t_cid = "1";
-								}
+			/////					
+					if (!$p_c_description_posts){
+						$p_c_description_posts = "MissingCatDesc";
+					}
+					if (!$p_c_title_posts){
+						$p_c_title_posts = "MissingCat";
+					}
+					if (!$p_cid_posts){
+						$p_cid_posts = "1";
+					}
 
 								
-								if (!$t_title){
-									$t_c_title = "MissingTop";
-								}
-								if (!$t_tid){
-									$t_cid = "1";
-								}
-								
+				if (!$t_title_posts){
+					$t_title_posts = "MissingTop";
+				}
+				if (!$t_tid_posts){
+					$t_tid_posts = "1";
+				}
 
+								
+								
+			
 								$stmt_prof_posts_sesh_rating_action = $con->prepare(
 									'SELECT rating_action
 									FROM rating_info 
-									WHERE user_id = '.$seshid.' AND post_id='.$pid.'');
+									WHERE user_id = '.$seshid.' AND post_id='.$pid_posts.'');
 								$stmt_prof_posts_sesh_rating_action->execute();
 								$stmt_prof_posts_sesh_rating_action->store_result();
-								$stmt_prof_posts_sesh_rating_action->bind_result($posts_sesh_rating_action);
+								$stmt_prof_posts_sesh_rating_action->bind_result($posts_sesh_rating_action_posts);
 
 								$stmt_prof_posts_sesh_rating_action->fetch();
 
-								$bgup="bg-secondary";
-								$bgdown="bg-secondary";
+								$bgup_posts="bg-secondary";
+								$bgdown_posts="bg-secondary";
 
 								
 
@@ -393,9 +391,9 @@ $uid = $_GET['uid'];
 								$stmt_updoot_count = $con->prepare(
 									"SELECT count(*) 
 									FROM rating_info 
-									WHERE rating_action = 'updoot' AND post_id='".$pid."'"); 
+									WHERE rating_action = 'updoot' AND post_id='".$pid_posts."'"); 
 								$stmt_updoot_count->execute(); 
-								$stmt_updoot_count->bind_result($number_of_updoots);
+								$stmt_updoot_count->bind_result($number_of_updoots_posts);
 								$stmt_updoot_count->fetch();
 
 								$stmt_updoot_count->close();
@@ -403,73 +401,73 @@ $uid = $_GET['uid'];
 								$stmt_boop_count = $con->prepare(
 									"SELECT count(*) 
 									FROM rating_info 
-									WHERE rating_action = 'boop' AND post_id='".$pid."'"); 
+									WHERE rating_action = 'boop' AND post_id='".$pid_posts."'"); 
 								$stmt_boop_count->execute(); 
-								$stmt_boop_count->bind_result($number_of_boops);
+								$stmt_boop_count->bind_result($number_of_boops_posts);
 								$stmt_boop_count->fetch();
 								$stmt_boop_count->close();
 
-								$bgvotetally="btn-vote";
-								$bgvoteytally="btn-dark";
-								$bgvoteyicon="fas fa-balance-scale";
+								$bgvotetally_posts="btn-vote";
+								$bgvoteytally_posts="btn-dark";
+								$bgvoteyicon_posts="fas fa-balance-scale";
 
 
-								if(($posts_sesh_rating_action == 'updoot')){
-									$bgup='btn-dope';
-									$bgdown="btn-vote-nope";
+								if(($posts_sesh_rating_action_posts == 'updoot')){
+									$bgup_posts='btn-dope';
+									$bgdown_posts="btn-vote-nope";
 								}
-								if(($posts_sesh_rating_action == 'boop')){
-									$bgup='btn-vote-dope';
-									$bgdown="btn-nope ";
+								if(($posts_sesh_rating_action_posts == 'boop')){
+									$bgup_posts='btn-vote-dope';
+									$bgdown_posts="btn-nope ";
 								}
 
-								if(($posts_sesh_rating_action != 'boop') && ($posts_sesh_rating_action != 'updoot')){
-									$bgup='btn-vote-dope';
-									$bgdown="btn-vote-nope";
-								}
-								
-
-								$total_votes = $number_of_boops + $number_of_updoots;
-
-								if($number_of_boops != $number_of_updoots ){
-									$total_updoot_perc =  round(($number_of_updoots / $total_votes) * 100,2);
-									$total_boop_perc =  round(($number_of_boops / $total_votes)* 100, 2);
+								if(($posts_sesh_rating_action_posts != 'boop') && ($posts_sesh_rating_action_posts != 'updoot')){
+									$bgup_posts='btn-vote-dope';
+									$bgdown_posts="btn-vote-nope";
 								}
 								
+
+								$total_votes_posts = $number_of_boops_posts + $number_of_updoots_posts;
+
+								if($number_of_boops_posts != $number_of_updoots_posts ){
+									$total_updoot_perc_posts =  round(($number_of_updoots_posts / $total_votes_posts) * 100,2);
+									$total_boop_perc_posts =  round(($number_of_boops_posts / $total_votes_posts)* 100, 2);
+								}
+								
 								
 								
 
 								
-									if($number_of_boops > $number_of_updoots){
-										$bgvotetally='btn-nope';
-										$bgvoteytally='bg-danger';
-										$bgvoteyicon='fas fa-balance-scale-right';
-										$winperc= $total_boop_perc;
+									if($number_of_boops_posts > $number_of_updoots_posts){
+										$bgvotetally_posts='btn-nope';
+										$bgvoteytally_posts='bg-danger';
+										$bgvoteyicon_posts='fas fa-balance-scale-right';
+										$winperc_posts= $total_boop_perc_posts;
 										}
 								
-									if($number_of_boops < $number_of_updoots){
-										$bgvotetally='btn-dope';
-										$bgvoteytally='bg-success';
-										$bgvoteyicon='fas fa-balance-scale-left';
-										$winperc= $total_updoot_perc;
+									if($number_of_boops_posts < $number_of_updoots_posts){
+										$bgvotetally_posts='btn-dope';
+										$bgvoteytally_posts='bg-success';
+										$bgvoteyicon_posts='fas fa-balance-scale-left';
+										$winperc_posts= $total_updoot_perc_posts;
 										
 									}
 								
-									if($number_of_boops == $number_of_updoots ){
-										$winperc= 50;
-										$bgvotetally='btn-vote';
-										$bgvoteytally='bg-dark';
-										$bgvoteyicon='fas fa-balance-scale';
-										if(($number_of_boops == 0)||($number_of_boops == 0)){
-											$bgup='btn-vote-dope';
-											$bgdown="btn-vote-nope";
+									if($number_of_boops_posts == $number_of_updoots_posts ){
+										$winperc_posts= 50;
+										$bgvotetally_posts='btn-vote';
+										$bgvoteytally_posts='bg-dark';
+										$bgvoteyicon_posts='fas fa-balance-scale';
+										if(($number_of_boops_posts == 0)||($number_of_boops_posts == 0)){
+											$bgup_posts='btn-vote-dope';
+											$bgdown_posts="btn-vote-nope";
 										}
 	
 									}
 
 								
 
-
+			/////
 								
 								
 
@@ -478,9 +476,9 @@ $uid = $_GET['uid'];
 								$prof_posts .= "
 									<div class='row'>
 										<div class='col'>
-											<a href='view_topic.php?cid=".$t_cid."&tid=".$p_tid."'>
+											<a href='view_topic.php?cid=".$p_cid_posts."&tid=".$p_tid_posts."'>
 												<button class='btn btn-dark text-white'>
-													<p class='btn ".$bgvotetally."'><span ><i class='far fa-comments text-white'></i> | ".$p_content."</span></p>
+													<p class='btn ".$bgvotetally_posts."'><span ><i class='far fa-comments text-white'></i> | ".$p_content_posts."</span></p>
 												</button>
 											</a>
 										</div>
@@ -490,27 +488,27 @@ $uid = $_GET['uid'];
 										<div class='col'>
 											<form action='update_updoots.php' method='post'>
 												<input type='hidden' name='rating_action' value='updoot'/>
-												<input type='hidden' name='tid' value='".$pid."'/>
-												<button class='btn ".$bgup." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+												<input type='hidden' name='tid' value='".$pid_posts."'/>
+												<button class='btn ".$bgup_posts." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
 													<i class='fas fa-angle-up'style='font-size:.5vw;'></i>
-													| ".$number_of_updoots."
+													| ".$number_of_updoots_posts."
 												</button>
 											</form>
 										</div>
 										<div class='col'>
-											<span class='badge ".$bgvoteytally."' >
-												<i class='".$bgvoteyicon."'style='font-size:.5vw;'></i>
-												| ".$winperc."
+											<span class='badge ".$bgvoteytally_posts."' >
+												<i class='".$bgvoteyicon_posts."'style='font-size:.5vw;'></i>
+												| ".$winperc_posts."
 											</span>
 											
 										</div>
 										<div class='col'>
 											<form action='update_updoots.php' method='post'>
 												<input type='hidden' name='rating_action' value='boop'/>
-												<input type='hidden' name='tid' value='".$pid."'/>
-												<button class='btn ".$bgdown." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+												<input type='hidden' name='tid' value='".$pid_posts."'/>
+												<button class='btn ".$bgdown_posts." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
 													<i class='fas fa-angle-down'style='font-size:.5vw;'></i>
-													| ".$number_of_boops."
+													| ".$number_of_boops_posts."
 												</button>
 											</form>
 
@@ -527,13 +525,13 @@ $uid = $_GET['uid'];
 														| ".$prof_username."
 													</span>
 													to 
-													<a href='view_category.php?cid=".$t_cid."'>
+													<a href='view_category.php?cid=".$p_cid_posts."'>
 													<span class='badge bg-primary'>
 														<i class='fas fa-book-open'style='font-size:.5vw;'></i>
-														| ".substr($t_title, 0, 40)."
+														| ".substr($p_c_title_posts, 0, 40)."
 													</span>
 													</a>
-													- ".$p_date."
+													- ".$p_date_posts."
 												</span>
 											
 										</div>
@@ -582,30 +580,31 @@ $uid = $_GET['uid'];
 
 
 
-				<div id="votes" class="container tab-pane fade bg-secondary">
+<div id="votes" class="container tab-pane fade bg-secondary">
 					<?php
-						$prof_posts ="";
-						
-						//Get posts table info from database
-						$stmt_prof_posts = $con->prepare('SELECT id,category_id,post_content,post_date,topic_id,post_creator FROM posts WHERE post_creator = '.$prof_id.' ORDER BY post_date DESC');
-						$stmt_prof_posts->execute();
-						$stmt_prof_posts->store_result();
-						$stmt_prof_posts->bind_result($pid,$cid,$p_content,$p_date,$p_tid,$post_creator );
+						$prof_votes ="";
 
-						//if there are posts created by this user then show this stuff
-						if ($stmt_prof_posts->num_rows > 0) {
+						//Get posts table info from database
+						$stmt_prof_votes = $con->prepare('SELECT post_id,rating_action,rating_date FROM rating_info WHERE user_id = '.$prof_id.' ORDER BY rating_date DESC');
+						$stmt_prof_votes->execute();
+						$stmt_prof_votes->store_result();
+						$stmt_prof_votes->bind_result($pid_vote,$rating_action_vote,$rating_date_vote );
+
+
+						if ($stmt_prof_votes->num_rows > 0) {
+
 
 							//POSTS Header HTML
-							$prof_posts .= "
+							$prof_votes .= "
 							<div class='text-center'width='100% container' style='border-collapse:collapse;'>
 								<div class='row text-center'>
 									<div class='col'>	
 										<h2 class='text-white'>
-											<span class='badge bg-primary'>
-												<i class='far fa-comments'></i>
-												| Comments
+											<span class='badge bg-success'>
+												<i class='fas fa-balance-scale'></i>
+												| Votes
 											</span>
-											<i class='fas fa-edit'></i> by:
+											 by:
 											<span class='badge bg-dark'>
 												<i class='fas fa-user-circle'></i>
 												| ".$prof_username."
@@ -615,153 +614,183 @@ $uid = $_GET['uid'];
 								</div>
 							";
 
-							while(($row_prof_posts = $stmt_prof_posts->fetch()) ){
+						while(($row_prof_votes = $stmt_prof_votes->fetch()) ){
+
+
+
+						
+						//Get posts table info from database
+						$stmt_prof_posts_votes  = $con->prepare('SELECT id,category_id,post_content,post_date,topic_id,post_creator FROM posts WHERE id = '.$pid_vote.' ORDER BY post_date DESC ');
+						$stmt_prof_posts_votes ->execute();
+						$stmt_prof_posts_votes ->store_result();
+						$stmt_prof_posts_votes ->bind_result($pid_vote,$cid_vote,$p_content_vote,$p_date_vote,$p_tid,$post_creator_vote );
+
+						//if there are posts created by this user then show this stuff
+						if ($stmt_prof_posts_votes ->num_rows > 0) {
+
+							
+							//get cat info
+
+							
+
+							while(($row_prof_posts_votes  = $stmt_prof_posts_votes ->fetch()) ){
 								
+								//Get users table username from database
+								$stmt_get_post_username = $con->prepare('SELECT username FROM users WHERE id = ?');
+								$stmt_get_post_username->bind_param('i', $post_creator_vote);
+								$stmt_get_post_username->execute();
+								$stmt_get_post_username->bind_result($post_username_vote);
+								$stmt_get_post_username->fetch();
+								$stmt_get_post_username->close();
+
+								if (!$post_username_vote){
+									$post_username_vote = "MissingNo";
+								}
 								
-								$stmt_prof_posts_cats = $con->prepare(
+								$stmt_prof_votes_cats = $con->prepare(
 									'SELECT id,category_title,category_description,last_user_posted,last_post_date 
 									FROM catergories 
-									WHERE id = '.$cid.'');
-								$stmt_prof_posts_cats->execute();
-								$stmt_prof_posts_cats->store_result();
-								$stmt_prof_posts_cats->bind_result($p_cid,$p_c_title,$p_c_description,$p_c_last_user_posted,$p_c_last_post_date);
+									WHERE id = '.$cid_vote.'');
+								$stmt_prof_votes_cats->execute();
+								$stmt_prof_votes_cats->store_result();
+								$stmt_prof_votes_cats->bind_result($p_cid_vote,$p_c_title_vote,$p_c_description_vote,$p_c_last_votes_posted_vote,$p_c_last_post_date_vote);
 
-								while(($row_prof_posts_cats =$stmt_prof_posts_cats->fetch()) ){
+								while(($row_prof_votes_cats =$stmt_prof_votes_cats->fetch()) ){
 								
 								//Get topics table info from database
-								$stmt_prof_posts_tops = $con->prepare('SELECT category_id,topic_title,topic_date,topic_creator,topic_views FROM topics WHERE topic_creator = '.$cid.'');
-								$stmt_prof_posts_tops->execute();
-								$stmt_prof_posts_tops->store_result();
-								$stmt_prof_posts_tops->bind_result($t_cid,$t_title,$t_date,$t_tid,$t_views);
-								$stmt_prof_posts_tops->fetch();
+								$stmt_prof_votes_tops = $con->prepare('SELECT id,category_id,topic_title,topic_date,topic_creator,topic_views FROM topics WHERE topic_creator = '.$post_creator_vote.'');
+								$stmt_prof_votes_tops->execute();
+								$stmt_prof_votes_tops->store_result();
+								$stmt_prof_votes_tops->bind_result($t_tid_vote,$t_cid_vote,$t_title_vote,$t_date_vote,$t_tid_vote,$t_views_vote);
+								$stmt_prof_votes_tops->fetch();
+
+			////					
+								if (!$p_c_description_vote){
+									$p_c_description_vote = "MissingDesc";
+								}
+								if (!$p_c_title_vote){
+									$p_c_title_vote = "MissingCat";
+								}
+								if (!$p_cid_vote){
+									$p_cid_vote = "1";
+								}
 
 								
-								if (!$p_c_description){
-									$t_c_description = "MissingDesc";
+								if (!$t_title_vote){
+									$t_title_vote = "MissingTop";
 								}
-								if (!$p_c_title){
-									$t_c_title = "MissingCat";
-								}
-								if (!$p_cid){
-									$t_cid = "1";
-								}
-
-								
-								if (!$t_title){
-									$t_c_title = "MissingTop";
-								}
-								if (!$t_tid){
-									$t_cid = "1";
+								if (!$t_tid_vote){
+									$t_tid_vote = "1";
 								}
 								
 
-								$stmt_prof_posts_sesh_rating_action = $con->prepare(
+								$stmt_prof_votes_sesh_rating_action = $con->prepare(
 									'SELECT rating_action
 									FROM rating_info 
-									WHERE user_id = '.$seshid.' AND post_id='.$pid.'');
-								$stmt_prof_posts_sesh_rating_action->execute();
-								$stmt_prof_posts_sesh_rating_action->store_result();
-								$stmt_prof_posts_sesh_rating_action->bind_result($posts_sesh_rating_action);
+									WHERE user_id = '.$seshid.' AND post_id='.$pid_vote.'');
+								$stmt_prof_votes_sesh_rating_action->execute();
+								$stmt_prof_votes_sesh_rating_action->store_result();
+								$stmt_prof_votes_sesh_rating_action->bind_result($votes_sesh_rating_action_vote);
 
-								$stmt_prof_posts_sesh_rating_action->fetch();
+								$stmt_prof_votes_sesh_rating_action->fetch();
 
-								$bgup="bg-secondary";
-								$bgdown="bg-secondary";
-
-								
+								$bgupvote="bg-secondary";
+								$bgdownvote="bg-secondary";
 
 								
-								$stmt_updoot_count = $con->prepare(
+
+								
+								$stmt_updoot_count_votes = $con->prepare(
 									"SELECT count(*) 
 									FROM rating_info 
-									WHERE rating_action = 'updoot' AND post_id='".$pid."'"); 
-								$stmt_updoot_count->execute(); 
-								$stmt_updoot_count->bind_result($number_of_updoots);
-								$stmt_updoot_count->fetch();
+									WHERE rating_action = 'updoot' AND post_id='".$pid_vote."'"); 
+								$stmt_updoot_count_votes->execute(); 
+								$stmt_updoot_count_votes->bind_result($number_of_updoots_vote);
+								$stmt_updoot_count_votes->fetch();
 
-								$stmt_updoot_count->close();
+								$stmt_updoot_count_votes->close();
 
-								$stmt_boop_count = $con->prepare(
+								$stmt_boop_count_votes = $con->prepare(
 									"SELECT count(*) 
 									FROM rating_info 
-									WHERE rating_action = 'boop' AND post_id='".$pid."'"); 
-								$stmt_boop_count->execute(); 
-								$stmt_boop_count->bind_result($number_of_boops);
-								$stmt_boop_count->fetch();
-								$stmt_boop_count->close();
+									WHERE rating_action = 'boop' AND post_id='".$pid_vote."'"); 
+								$stmt_boop_count_votes->execute(); 
+								$stmt_boop_count_votes->bind_result($number_of_boops_vote);
+								$stmt_boop_count_votes->fetch();
+								$stmt_boop_count_votes->close();
 
-								$bgvotetally="btn-vote";
-								$bgvoteytally="btn-dark";
-								$bgvoteyicon="fas fa-balance-scale";
+								$bgvotetallyvote="btn-vote";
+								$bgvoteytallyvote="btn-dark";
+								$bgvoteyiconvote="fas fa-balance-scale";
 
 
-								if(($posts_sesh_rating_action == 'updoot')){
-									$bgup='btn-dope';
-									$bgdown="btn-vote-nope";
+								if(($votes_sesh_rating_action_vote == 'updoot')){
+									$bgupvote='btn-dope';
+									$bgdownvote="btn-vote-nope";
 								}
-								if(($posts_sesh_rating_action == 'boop')){
-									$bgup='btn-vote-dope';
-									$bgdown="btn-nope ";
+								if(($votes_sesh_rating_action_vote == 'boop')){
+									$bgupvote='btn-vote-dope';
+									$bgdownvote="btn-nope ";
 								}
 
-								if(($posts_sesh_rating_action != 'boop') && ($posts_sesh_rating_action != 'updoot')){
-									$bgup='btn-vote-dope';
-									$bgdown="btn-vote-nope";
-								}
-								
-
-								$total_votes = $number_of_boops + $number_of_updoots;
-
-								if($number_of_boops != $number_of_updoots ){
-									$total_updoot_perc =  round(($number_of_updoots / $total_votes) * 100,2);
-									$total_boop_perc =  round(($number_of_boops / $total_votes)* 100, 2);
+								if(($votes_sesh_rating_action_vote != 'boop') && ($votes_sesh_rating_action_vote != 'updoot')){
+									$bgupvote='btn-vote-dope';
+									$bgdownvote="btn-vote-nope";
 								}
 								
+
+								$total_votes_vote = $number_of_boops_vote + $number_of_updoots_vote;
+
+								if($number_of_boops_vote != $number_of_updoots_vote ){
+									$total_updoot_perc_vote =  round(($number_of_updoots_vote / $total_votes_vote) * 100,2);
+									$total_boop_perc_vote =  round(($number_of_boops_vote / $total_votes_vote)* 100, 2);
+								}
+								
 								
 								
 
 								
-									if($number_of_boops > $number_of_updoots){
-										$bgvotetally='btn-nope';
-										$bgvoteytally='bg-danger';
-										$bgvoteyicon='fas fa-balance-scale-right';
-										$winperc= $total_boop_perc;
+									if($number_of_boops_vote > $number_of_updoots_vote){
+										$bgvotetallyvote='btn-nope';
+										$bgvoteytallyvote='bg-danger';
+										$bgvoteyiconvote='fas fa-balance-scale-right';
+										$winpercvote= $total_boop_perc_vote;
 										}
 								
-									if($number_of_boops < $number_of_updoots){
-										$bgvotetally='btn-dope';
-										$bgvoteytally='bg-success';
-										$bgvoteyicon='fas fa-balance-scale-left';
-										$winperc= $total_updoot_perc;
+									if($number_of_boops_vote < $number_of_updoots_vote){
+										$bgvotetallyvote='btn-dope';
+										$bgvoteytallyvote='bg-success';
+										$bgvoteyiconvote='fas fa-balance-scale-left';
+										$winpercvote= $total_updoot_perc_vote;
 										
 									}
 								
-									if($number_of_boops == $number_of_updoots ){
-										$winperc= 50;
-										$bgvotetally='btn-vote';
-										$bgvoteytally='bg-dark';
-										$bgvoteyicon='fas fa-balance-scale';
-										if(($number_of_boops == 0)||($number_of_boops == 0)){
-											$bgup='btn-vote-dope';
-											$bgdown="btn-vote-nope";
+									if($number_of_boops_vote == $number_of_updoots_vote ){
+										$winpercvote= 50;
+										$bgvotetallyvote='btn-vote';
+										$bgvoteytallyvote='bg-dark';
+										$bgvoteyiconvote='fas fa-balance-scale';
+										if(($number_of_boops_vote == 0)||($number_of_boops_vote == 0)){
+											$bgupvote='btn-vote-dope';
+											$bgdownvote="btn-vote-nope";
 										}
 	
 									}
 
 								
-
+			////						
 
 								
 								
 
 
 								//posts content HTML		
-								$prof_posts .= "
+								$prof_votes .= "
 									<div class='row'>
 										<div class='col'>
-											<a href='view_topic.php?cid=".$t_cid."&tid=".$p_tid."'>
+											<a href='view_topic.php?cid=".$t_cid_vote."&tid=".$t_tid_vote."'>
 												<button class='btn btn-dark text-white'>
-													<p class='btn ".$bgvotetally."'><span ><i class='far fa-comments text-white'></i> | ".$p_content."</span></p>
+													<p class='btn ".$bgvotetallyvote."'><span ><i class='far fa-comments text-white'></i> | ".$p_content_vote."</span></p>
 												</button>
 											</a>
 										</div>
@@ -771,27 +800,27 @@ $uid = $_GET['uid'];
 										<div class='col'>
 											<form action='update_updoots.php' method='post'>
 												<input type='hidden' name='rating_action' value='updoot'/>
-												<input type='hidden' name='tid' value='".$pid."'/>
-												<button class='btn ".$bgup." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+												<input type='hidden' name='tid' value='".$pid_vote."'/>
+												<button class='btn ".$bgupvote." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
 													<i class='fas fa-angle-up'style='font-size:.5vw;'></i>
-													| ".$number_of_updoots."
+													| ".$number_of_updoots_vote."
 												</button>
 											</form>
 										</div>
 										<div class='col'>
-											<span class='badge ".$bgvoteytally."' >
-												<i class='".$bgvoteyicon."'style='font-size:.5vw;'></i>
-												| ".$winperc."
+											<span class='badge ".$bgvoteytallyvote."' >
+												<i class='".$bgvoteyiconvote."'style='font-size:.5vw;'></i>
+												| ".$winpercvote."
 											</span>
 											
 										</div>
 										<div class='col'>
 											<form action='update_updoots.php' method='post'>
 												<input type='hidden' name='rating_action' value='boop'/>
-												<input type='hidden' name='tid' value='".$pid."'/>
-												<button class='btn ".$bgdown." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+												<input type='hidden' name='tid' value='".$pid_vote."'/>
+												<button class='btn ".$bgdownvote." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
 													<i class='fas fa-angle-down'style='font-size:.5vw;'></i>
-													| ".$number_of_boops."
+													| ".$number_of_boops_vote."
 												</button>
 											</form>
 
@@ -803,18 +832,20 @@ $uid = $_GET['uid'];
 												<span class='post_info text-white' style='font-size:.5vw;' >
 													<i class='fas fa-edit'style='font-size:.5vw;'></i>
 													by: 
-													<span class='badge bg-dark' >
+													<a href='profile.php?uid=".$post_creator_vote."'>
+													<span class='badge bg-info' >
 														<i class='fas fa-user-circle'style='font-size:.5vw;'></i>
-														| ".$prof_username."
-													</span>
-													to 
-													<a href='view_category.php?cid=".$t_cid."'>
-													<span class='badge bg-primary'>
-														<i class='fas fa-book-open'style='font-size:.5vw;'></i>
-														| ".substr($t_title, 0, 40)."
+														| ".$post_username_vote."
 													</span>
 													</a>
-													- ".$p_date."
+													to 
+													<a href='view_category.php?cid=".$t_cid_vote."'>
+													<span class='badge bg-primary'>
+														<i class='fas fa-book-open'style='font-size:.5vw;'></i>
+														| ".substr($t_title_vote, 0, 40)."
+													</span>
+													</a>
+													- ".$p_date_vote."
 												</span>
 											
 										</div>
@@ -828,355 +859,48 @@ $uid = $_GET['uid'];
 								}
 								
 								
-								$stmt_prof_posts_tops->fetch();
+								$stmt_prof_votes_tops->fetch();
 								
-								$stmt_prof_posts_tops->close();
+								$stmt_prof_votes_tops->close();
 
 								}
-								$stmt_prof_posts_cats->fetch();
-								$stmt_prof_posts_cats->close();
+								$stmt_prof_votes_cats->fetch();
+								$stmt_prof_votes_cats->close();
 								
 								
 
 
 
-								$stmt_prof_posts_sesh_rating_action->close();
+								$stmt_prof_votes_sesh_rating_action->close();
 							
-							$prof_posts .= "</div>";
 							
-							echo $prof_posts;
 						}
 						//if the user hasn't created any posts yet
-						else{	
+						
+						$stmt_prof_posts_votes->fetch();
+						$stmt_prof_posts_votes->close();
+						}
+					
+					$prof_votes .= "</div>";
+							
+							echo $prof_votes;
+					
+					}else{	
 							echo"<div class='row'>
 							<div class='col'><h2 class='text-center'>You haven't created a topic yet</h2></div>	
 							</div>";
-							echo $prof_posts;
+							echo $prof_votes;
 						}
-						$stmt_prof_posts->fetch();
-						$stmt_prof_posts->close();
+						$stmt_prof_votes->fetch();
+						$stmt_prof_votes->close();
 					?>
-				</div>
+</div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-	<div id="oldposts" class="container tab-pane fade">
-		
-		
-		
-		
-		
-		
-		<?php
-			
-			$posts ="";
-					
-			$sql12 = "SELECT * FROM posts WHERE post_creator='".$uid."' ORDER BY post_date DESC ";
-			$res12 = mysqli_query($con, $sql12) or die(mysqli_error());
-
-			
-
-			if (mysqli_num_rows($res12) > 0){
-				$posts .= "<table width='100%' style='border-collapse:collapse;' >";
-				$posts .= "<h2 class='text-white'>Posts</h2>";
-				$posts .= "<tr style='background-color:#dddddd;'>
-				<td ><span class='badge bg-primary'><i class='far fa-comments'></i> | Comments</span> <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span> Created</td>
-				<td width='200'><span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topics</span> <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span><span class='badge bg-primary'><i class='far fa-comments'></i> | Commented</span> On</td>
-				<td width='65' align='center'><span class='badge bg-success'><i class='fas fa-angle-up'></i> | Updoots</span></td>
-				<td width='65' align='center'><span class='badge bg-danger'>Boops | <i class='fas fa-angle-down'></i></span></td>
-				<td width='65' align='center'><span class='badge bg-success'><i class='fas fa-balance-scale'></i> | Votes</span></td>
-				</tr>";
-				$posts .= "<tr><td colspan='6'><hr /></td></tr>";
-						
-				while($row11 = mysqli_fetch_assoc($res12)){
-					$tid = $row11['topic_id'];
-					$content = $row11['post_content'];
-					
-					$date = $row11['post_date'];
-					$creator = $row11['post_creator'];
-									
-					$sql7 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row11['id']."' AND rating_action='updoot'";
-					$result7 = mysqli_query($con, $sql7);
-					$row7 = mysqli_fetch_array($result7);
-					$updoots = $row7[0];
-
-					$sql8 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row11['id']."' AND rating_action='boop'";
-					$result8 = mysqli_query($con, $sql8);
-					$row8 = mysqli_fetch_array($result8);
-					$boops = $row8[0];
-
-					$sql9 = "SELECT COUNT(*) FROM rating_info WHERE post_id='".$row11['id']."'";
-					$result9 = mysqli_query($con, $sql9);
-					$row9 = mysqli_fetch_array($result9);
-					$votescast = $row9[0];
-
-
-					$cid = $row11['category_id'];
-
-					
-
-			
-					$posts .= "<tr class=' text-white'>
-					<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'><button class='btn bg-primary text-white'>
-					
-					<table>
-								  <tbody>
-									<tr>
-									  <td class='align-middle'><p><i class='far fa-comments text-white'></i></p></td>
-									  <td class='align-middle'><p>".$content."</p></td>
-									</tr>
-								  </tbody>
-								</table>
-					
-					</button></a>
-					<br />
-					<span class='post_info text-white'>Posted by: <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span> <br />on ".$date."</span></td>";
-
-					$sql33 = "SELECT * FROM topics WHERE id='".$tid."'";
-					$res33 = mysqli_query($con, $sql33) or die(mysqli_error());
-					while($row33 = mysqli_fetch_assoc($res33)){
-						$topic_title = $row33['topic_title'];
-						$topic_creator = $row33['topic_creator'];
-						$topic_date = $row33['topic_date'];
-					
-
-						
-
-						$stmt5 = $con->prepare('SELECT username,id FROM users WHERE id = ?');
-						// In this case we can use the account ID to get the account info.
-						$stmt5->bind_param('i', $topic_creator);
-						$stmt5->execute();
-						$stmt5->bind_result($topic_creator_username,$user_id);
-						$stmt5->fetch();
-						$stmt5->close();
-
-						if((!$topic_creator_username)){
-							$topic_creator_username ='MissingNo';
-						}
-
-						$posts .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>
-						
-						<button class='btn bg-primary'>
-						
-
-						 <table>
-								  <tbody>
-									<tr>
-									  <td class='align-middle'><p><i class='fas fa-book-open text-white'></i></p></td>
-									  <td class='align-middle text-white'><p>".$topic_title."</p></td>
-									</tr>
-								  </tbody>
-								</table>
-						 </button>
-						
-						</a>
-						<br />
-						<span class='post_info text-white'>Created by: <a href='profile.php?uid=".$topic_creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$topic_creator_username."</span></a><br/> on ".$topic_date."</span></td>";
-					}
-
-
-					$posts .= "<td align='center' class=' text-white'>".$updoots."</td>
-					<td align='center'>".$boops."</td>
-					<td align='center'>".$votescast."</td>
-					</tr>";
-					$posts .= "<tr><td colspan='6'><hr/></td></tr>";
-				}
-
-
-				$posts .= "</table>";
-				echo $posts;
-
-			}else{
-							
-				
-				echo"<h2 class='text-center'>You haven't created a topic yet</h2>";
-			}
-
-
-
-
-						
-						
-					
-		?>
-	</div>
-
-	<div id="oldvotes" class="container tab-pane fade">
-		<?php
-			$uid = $_GET['uid'];
-			$votes ="";
-				
-			$sql888 = "SELECT * FROM rating_info WHERE user_id='".$uid."' ORDER BY rating_date DESC ";
-			$res888 = mysqli_query($con, $sql888) or die(mysqli_error());
-
-			if (mysqli_num_rows($res888) > 0){
-				
-				$votes .= "<table width='100%' style='border-collapse:collapse;'>";
-				$votes .= "<h2 class=' text-white'>Votes</h2>";
-				$votes .= "<tr style='background-color:#dddddd;'>
-				<td ><span class='badge bg-primary'><i class='far fa-comments'></i> | Comments</span> <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span> <span class='badge bg-success'><i class='fas fa-balance-scale'></i> | Voted</span> On</td>
-				<td width='200'><span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topics</span> <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span> <span class='badge bg-success'><i class='fas fa-balance-scale'></i> | Voted</span> On</td>
-				<td width='100' align='center'><span class='badge bg-success'><i class='fas fa-balance-scale'></i> | Voted</span></td>
-				</tr>";
-				$votes .= "<tr><td colspan='6'><hr /></td></tr>";
-
-				while($row888 = mysqli_fetch_assoc($res888)){
-					$pid = $row888['post_id'];
-					$rating_action = $row888['rating_action'];
-					$rating_date = $row888['rating_date'];
-					$creator = $row888['user_id'];
-
-					
-
-					$sql39 = "SELECT * FROM posts WHERE  id='".$pid."'";
-					$res39 = mysqli_query($con, $sql39) or die(mysqli_error());
-
-
-					while($row39 = mysqli_fetch_assoc($res39)){
-						$cid = $row39['category_id'];
-						$content = $row39['post_content'];
-						$tid = $row39['topic_id'];
-						$date = $row39['post_date'];
-						
-						$post_creator = $row39['post_creator'];
-
-
-
-						$stmt55 = $con->prepare('SELECT username,id FROM users WHERE id = ?');
-						// In this case we can use the account ID to get the account info.
-						$stmt55->bind_param('i', $post_creator);
-						$stmt55->execute();
-						$stmt55->bind_result($post_creator_username,$user_id);
-						$stmt55->fetch();
-						$stmt55->close();
-
-						if((!$post_creator_username)){
-							$post_creator_username ='MissingNo';
-						}
-
-
-						$sql40 = "SELECT * FROM topics WHERE  id='".$tid."'";
-						$res40 = mysqli_query($con, $sql40) or die(mysqli_error());
-
-						while($row40 = mysqli_fetch_assoc($res40)){
-							
-							$topic_date = $row40['topic_date'];
-							$topic_title = $row40['topic_title'];
-							$topic_creator = $row40['topic_creator'];
-
-
-
-
-							$stmt5 = $con->prepare('SELECT username,id FROM users WHERE id = ?');
-							// In this case we can use the account ID to get the account info.
-							$stmt5->bind_param('i', $topic_creator);
-							$stmt5->execute();
-							$stmt5->bind_result($topic_creator_username,$user_id);
-							$stmt5->fetch();
-							$stmt5->close();
-
-							if((!$topic_creator_username)){
-								$topic_creator_username ='MissingNo';
-							}
-
-							
-
-							
-							
-						}
-						
-						$votes .= "<tr >";
-						$votes .= "
-						<td>
-
-							<a href='view_topic.php?cid=".$cid."&tid=".$tid."'>
-								<button class='btn bg-primary text-white'>
-								
-									
-									
-
-								  <table>
-								  <tbody>
-									<tr>
-									  <td class='align-middle'><p><i class='far fa-comments text-white'></i></p></td>
-									  <td class='align-middle'><p>".$content."</p></td>
-									</tr>
-									
-								  </tbody>
-								</table>
-
-
-
-								</button>
-							</a>
-
-
-
-							<br />
-
-							<span class='post_info text-white'>
-								Posted by: <a href='profile.php?uid=".$post_creator."'>
-									<span class='badge bg-info'>
-										<i class='fas fa-user-circle'></i>
-										 | ".$post_creator_username."
-									</span>
-								</a> 
-								<br />on ".$date."</span></td>";
-					
-						$votes .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'><button class='btn bg-primary'>
-						<table>
-								  <tbody>
-									<tr>
-									  <td class='align-middle'><p><i class='fas fa-book-open text-white'></i></p></td>
-									  <td class='align-middle text-white'><p>".$topic_title."</p></td>
-									</tr>
-								  </tbody>
-								</table>
-						
-						</button>
-						
-						</a>
-						<br />
-						<span class='post_info text-white'>Created by: <a href='profile.php?uid=".$topic_creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$topic_creator_username."</span></a><br/> on ".$topic_date."</span></td>";
-						
-						$votes .= "
-						<td align='center' class='text-white'>".$rating_action."</td>
-						";
-						$votes .= "
-					
-						</tr>";
-						$votes .= "<tr><td colspan='6'><hr/></td></tr>";
-						
-					}
-					
-
-				}
-				
-				$votes .= "</table>";
-				echo $votes;
-			}
-			else{
-							
-				echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-				echo"<h2 class='text-center'>You haven't created a topic yet</h2>";
-			}
-
-		?>
-	</div>
-
-	<div id="notvoted" class="container tab-pane  active">
-		<?php
-			$uid = $_GET['uid'];
+<div id="notvoted" class="container tab-pane active bg-secondary">
+					<?php
+					$uid = $_GET['uid'];
 			$notvoted ="";
 				
 			$sql77 = "SELECT * FROM posts ORDER BY post_date DESC ";
@@ -1309,6 +1033,16 @@ $uid = $_GET['uid'];
 
 		?>
 	</div>
+
+
+
+
+
+
+
+
+
+
 	
 	
 			<div id="messagefrom" class="container tab-pane ">
