@@ -18,40 +18,17 @@ $stmt->bind_result($email,$username);
 $stmt->fetch();
 $stmt->close();
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Profile Page</title>
-  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-		<link href="style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-	</head>
-	<body class="loggedin bg-dark">
-		<nav class="navtop">
-			<div>
-				<h1><a href="home.php">Direct Democracy Communication</a></h1>
-				
-				<a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$username?></button></a>
-				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
-			</div>
-		</nav>
-		<div class="content container ">
 
-            <?php
 
-                
-                if(isset($_POST['updoot_submit'])){
-                    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-                    $config = parse_ini_file('db.ini');
-                            $con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
-                            $con->set_charset('utf8mb4'); // charset
+<?php
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $config = parse_ini_file('db.ini');
+    $con =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+    $con->set_charset('utf8mb4'); // charset
                         
-                    $creator = $_SESSION['id'];
-                    $tid = $_POST['tid'];
-                    $rating_action = $_POST['rating_action'];
+    $creator = $_SESSION['id'];
+    $tid = $_POST['tid'];
+    $rating_action = $_POST['rating_action'];
 
                     $sql = "SELECT post_id, user_id, rating_action FROM rating_info WHERE user_id='".$creator."' AND  post_id='".$tid."'";
                     $res = mysqli_query($con, $sql) or die(mysqli_error());
@@ -75,10 +52,10 @@ $stmt->close();
                                 if ( ($rating_action=="boop")) {
                                     echo "<div class='text-center bg-danger text-white'><p>'".$rating_action."' successfully updated</p>";
                                 }
-                                header("Refresh: 0.2; url=profile.php?uid=".$_SESSION['id']."");
+                                header("Refresh: 1; url=home.php");
                             }else{
                                 echo "<div class='text-center bg-secondary text-white'><p>There was a problem, try again</p></div>";
-                                header("Refresh: 0.2; url=profile.php?uid=".$_SESSION['id']."");
+                                header("Refresh: 1; url=home.php");
                             }
                         }
                         
@@ -97,61 +74,18 @@ $stmt->close();
                                         
                                     }
 
-                                    header("Refresh: 0.2; url=profile.php?uid=".$_SESSION['id']."");
+                                    header("Refresh: 1; url=home.php");
                             }else{
                                 echo "<div class='text-center bg-warning text-white'><p>There was a problem, try again</p></div>";
-                                header("Refresh: 0.2; url=profile.php?uid=".$_SESSION['id']."");
+                                header("Refresh: 1; url=home.php");
                             }
                     }
                         
                     
                     
-                }else{
-                    exit();
-                }
+                
 
 
 
             ?>
-        </div>	
-
-
-        <!-- The Modal -->
-        <div class="modal" id="profileModal">
-            <div class="modal-dialog">
-                <div class="modal-content bg-secondary text-white">
-
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Account Details</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <table>
-                        <tr>
-                        <td>Username ID:</td>
-                        <td><?=$_SESSION['id']?></td>
-                        </tr>
-                        <tr>
-                        <?php
-                                    
-                        echo "<td>Username:</td>
-                        <td><a href='profile.php?uid=".$creator."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$username."<span></a></td>";
-                    
-                        ?>
-                        </tr>
-                        <tr>
-                        <td>Email:</td>
-                        <td><?=$email?></td>
-                        </tr>
-                        </table>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+       

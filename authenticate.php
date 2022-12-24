@@ -24,11 +24,66 @@ if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?'
 	if (password_verify($_POST['password'], $password)) {
 		// Verification success! User has logged-in!
 		// Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
+
+
+
+
+
+
+		
 		session_regenerate_id();
 		$_SESSION['loggedin'] = TRUE;
 		$_SESSION['name'] = $_POST['username'];
 		$_SESSION['id'] = $id;
-		header('Location: home.php');
+
+
+
+
+
+
+		//update username, user_id and unique_id in users table so password only has to be called at login
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+		$config = parse_ini_file('db.ini');
+				$conn =  new mysqli("localhost",$config['username'],$config['password'],$config['db']);
+				$conn->set_charset('utf8mb4'); // charset
+			
+		$user_id = $_SESSION['id'];
+		$user_name = $_SESSION['name'] ;
+
+		$sql = "SELECT username, id FROM users WHERE username='".$user_name."' AND  id='".$user_id."'";
+		$res = mysqli_query($conn, $sql) or die(mysqli_error());
+
+		if($row = mysqli_fetch_assoc($res)){
+			if ($user_name != ""){
+				
+
+				$sql3 = "UPDATE users SET username='".$user_name."',uneek_id='".$user_id."',id='".$user_id."' WHERE id='".$user_id."' LIMIT 1";
+				$res3 = mysqli_query($conn, $sql3) or die(mysqli_error());
+
+
+			}
+			
+		}else{
+			$sql2 = "INSERT INTO users (username, id,uneek_id ) VALUES ('".$user_name."', '".$user_id."','".$user_id."' )  LIMIT 1";
+				$res2 = mysqli_query($conn, $sql2) or die(mysqli_error());
+				
+		}
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+		header("Refresh: 0; url=profile.php?uid=".$_SESSION['id']."");
 	} else {
 		// Incorrect password
 		echo "Incorrect username and/or password! <a href='index.html'>Back</a>";

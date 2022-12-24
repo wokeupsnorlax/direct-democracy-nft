@@ -27,7 +27,7 @@ $uid = $_GET['uid'];
   		<link rel="icon" type="image/x-icon" href="img/favicon.ico">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 		
-		<link rel="stylesheet" href="fontawesome-free-5.15.4-web/css/all.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.css">
 
 		<link href="style.css" rel="stylesheet" type="text/css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -292,7 +292,11 @@ $uid = $_GET['uid'];
 						//if the user hasn't created any topics yet
 						else{	
 							echo"<div class='row'>
-							<div class='col'><h2 class='text-center'>You haven't created a topic yet</h2></div>	
+							<div class='col'>
+							
+							
+							
+							<h2 class='text-center text-white'><a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> hasn't created a topic yet</h2></div>	
 							</div>";
 							echo $prof_topics;
 						}
@@ -359,6 +363,11 @@ $uid = $_GET['uid'];
 					}
 					if (!$p_cid_posts){
 						$p_cid_posts = "1";
+					}
+
+					
+					if (!$p_content_posts){
+						$p_content_posts = "MissingComment";
 					}
 
 								
@@ -527,7 +536,7 @@ $uid = $_GET['uid'];
 													to 
 													<a href='view_category.php?cid=".$p_cid_posts."'>
 													<span class='badge bg-primary'>
-														<i class='fas fa-book-open'style='font-size:.5vw;'></i>
+														<i class='far fa-bookmark'style='font-size:.5vw;'></i>
 														| ".substr($p_c_title_posts, 0, 40)."
 													</span>
 													</a>
@@ -566,7 +575,7 @@ $uid = $_GET['uid'];
 						//if the user hasn't created any posts yet
 						else{	
 							echo"<div class='row'>
-							<div class='col'><h2 class='text-center'>You haven't created a topic yet</h2></div>	
+							<div class='col'><h2 class='text-center text-white'><a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> hasn't commented on a topic yet</h2></div>	
 							</div>";
 							echo $prof_posts;
 						}
@@ -675,6 +684,9 @@ $uid = $_GET['uid'];
 									$p_cid_vote = "1";
 								}
 
+								if (!$p_content_vote){
+									$p_content_vote = "MissingComment";
+								}
 								
 								if (!$t_title_vote){
 									$t_title_vote = "MissingTop";
@@ -887,7 +899,7 @@ $uid = $_GET['uid'];
 					
 					}else{	
 							echo"<div class='row'>
-							<div class='col'><h2 class='text-center'>You haven't created a topic yet</h2></div>	
+							<div class='col'><h2 class='text-center text-white'><a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> hasn't voted on a comment yet</h2></div>	
 							</div>";
 							echo $prof_votes;
 						}
@@ -898,24 +910,53 @@ $uid = $_GET['uid'];
 
 
 
+
+
 <div id="notvoted" class="container tab-pane active bg-secondary">
-					<?php
-					$uid = $_GET['uid'];
-			$notvoted ="";
-				
+	<?php
+		
+		$notvoted_new ="";	
+
+
+
+
+
+
+
+
 			$sql77 = "SELECT * FROM posts ORDER BY post_date DESC ";
 			$res77 = mysqli_query($con, $sql77) or die(mysqli_error());
 
 			if (mysqli_num_rows($res77) > 0){
 				
-				$notvoted .= "<table width='100%' style='border-collapse:collapse;'>";
-				$notvoted .= "<h2>Not Voted Yet</h2>";
-				$notvoted .= "<tr style='background-color:#dddddd;'>
-				<td >Posts <span class='badge bg-dark'><i class='fas fa-user-circle'></i> | ".$prof_username."</span> Hasn't Voted On Yet</td>
-				<td width='200'>From Topic</td>
-				<td width='100' align='center'>Vote Cast</td>
-				</tr>";
-				$notvoted .= "<tr><td colspan='6'><hr /></td></tr>";
+				
+
+				//POSTS Header HTML
+				$notvoted_new .= "
+				<div class='text-center'width='100% container' style='border-collapse:collapse;'>
+					<div class='row text-center'>
+						<div class='col'>	
+							<h2 class='text-white'>
+								<span class='badge bg-danger'>
+									<i class='fas fa-biohazard'></i>
+									| Not Voted Yet
+								</span>
+								by:
+								<span class='badge bg-dark'>
+									<i class='fas fa-user-circle'></i>
+									| ".$prof_username."
+								</span>
+							</h2>
+						</div>
+					</div>
+				";
+
+
+
+
+
+
+
 
 				while($row77 = mysqli_fetch_assoc($res77)){
 					$pid = $row77['id'];
@@ -959,7 +1000,8 @@ $uid = $_GET['uid'];
 			
 							$sql40 = "SELECT * FROM topics WHERE  id='".$tid."'";
 							$res40 = mysqli_query($con, $sql40) or die(mysqli_error());
-			$notvoted .= "<tr>";
+			
+							
 							while($row40 = mysqli_fetch_assoc($res40)){
 								
 								$topic_date = $row40['topic_date'];
@@ -979,9 +1021,212 @@ $uid = $_GET['uid'];
 								}
 
 
+
+
+//Get topics table info from database
+$stmt_prof_votes_tops_nv = $con->prepare('SELECT id,category_id,topic_title,topic_date,topic_creator,topic_views FROM topics WHERE topic_creator = '.$topic_creator.'');
+$stmt_prof_votes_tops_nv->execute();
+$stmt_prof_votes_tops_nv->store_result();
+$stmt_prof_votes_tops_nv->bind_result($t_tid_vote_not,$t_cid_vote_not,$t_title_vote_not,$t_date_vote_not,$t_tid_vote_not,$t_views_vote_not);
+$stmt_prof_votes_tops_nv->fetch();
+
+////					
+
+
+if (!$content){
+	$content = "MissingComment";
+}
+if (!$cid){
+	$cid = "1";
+}
+
+
+if (!$t_title_vote_not){
+	$t_title_vote_not = "MissingTop";
+}
+if (!$t_tid_vote_not){
+	$t_tid_vote_not = "1";
+}
+
+
+$stmt_prof_votes_sesh_rating_action_not = $con->prepare(
+	'SELECT rating_action
+	FROM rating_info 
+	WHERE user_id = '.$seshid.' AND post_id='.$pid.'');
+$stmt_prof_votes_sesh_rating_action_not->execute();
+$stmt_prof_votes_sesh_rating_action_not->store_result();
+$stmt_prof_votes_sesh_rating_action_not->bind_result($votes_sesh_rating_action_vote_not);
+
+$stmt_prof_votes_sesh_rating_action_not->fetch();
+
+$bgupvotenot="bg-secondary";
+$bgdownvotenot="bg-secondary";
+
+
+
+
+$stmt_updoot_count_votes_not = $con->prepare(
+	"SELECT count(*) 
+	FROM rating_info 
+	WHERE rating_action = 'updoot' AND post_id='".$pid."'"); 
+$stmt_updoot_count_votes_not->execute(); 
+$stmt_updoot_count_votes_not->bind_result($number_of_updoots_vote_not);
+$stmt_updoot_count_votes_not->fetch();
+
+$stmt_updoot_count_votes_not->close();
+
+$stmt_boop_count_votes_not = $con->prepare(
+	"SELECT count(*) 
+	FROM rating_info 
+	WHERE rating_action = 'boop' AND post_id='".$pid."'"); 
+$stmt_boop_count_votes_not->execute(); 
+$stmt_boop_count_votes_not->bind_result($number_of_boops_vote_not);
+$stmt_boop_count_votes_not->fetch();
+$stmt_boop_count_votes_not->close();
+
+$bgvotetallyvote="btn-vote";
+$bgvoteytallyvote="btn-dark";
+$bgvoteyiconvote="fas fa-balance-scale";
+
+
+if(($votes_sesh_rating_action_vote_not == 'updoot')){
+	$bgupvotenot='btn-dope';
+	$bgdownvotenot="btn-vote-nope";
+}
+if(($votes_sesh_rating_action_vote_not == 'boop')){
+	$bgupvotenot='btn-vote-dope';
+	$bgdownvotenot="btn-nope ";
+}
+
+if(($votes_sesh_rating_action_vote_not != 'boop') && ($votes_sesh_rating_action_vote_not != 'updoot')){
+	$bgupvotenot='btn-vote-dope';
+	$bgdownvotenot="btn-vote-nope";
+}
+
+
+$total_votes_vote_not = $number_of_boops_vote_not + $number_of_updoots_vote_not;
+
+if($number_of_boops_vote_not != $number_of_updoots_vote_not ){
+	$total_updoot_perc_vote_not =  round(($number_of_updoots_vote_not / $total_votes_vote_not) * 100,2);
+	$total_boop_perc_vote_not =  round(($number_of_boops_vote_not / $total_votes_vote_not)* 100, 2);
+}
+
+
+
+
+
+	if($number_of_boops_vote_not > $number_of_updoots_vote_not){
+		$bgvotetallyvotenot='btn-nope';
+		$bgvoteytallyvotenot='bg-danger';
+		$bgvoteyiconvotenot='fas fa-balance-scale-right';
+		$winpercvotenot= $total_boop_perc_vote_not;
+		}
+
+	if($number_of_boops_vote_not < $number_of_updoots_vote_not){
+		$bgvotetallyvotenot='btn-dope';
+		$bgvoteytallyvotenot='bg-success';
+		$bgvoteyiconvotenot='fas fa-balance-scale-left';
+		$winpercvotenot= $total_updoot_perc_vote_not;
+		
+	}
+
+	if($number_of_boops_vote_not == $number_of_updoots_vote_not ){
+		$winpercvotenot= 50;
+		$bgvotetallyvotenot='btn-vote';
+		$bgvoteytallyvotenot='bg-dark';
+		$bgvoteyiconvotenot='fas fa-balance-scale';
+		if(($number_of_boops_vote_not == 0)||($number_of_boops_vote_not == 0)){
+			$bgupvotenot='btn-vote-dope';
+			$bgdownvotenot="btn-vote-nope";
+		}
+
+	}
+
 								
-								$notvoted .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$content."</a>
-								<br /><span class='post_info'>Posted by: <a href='profile.php?uid=".$post_creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$post_creator_username."</span></a> <br />on ".$date."</span></td>";
+							
+
+
+
+
+
+
+
+
+
+
+
+
+
+								
+								//posts content HTML		
+								$notvoted_new .= "
+									<div class='row'>
+										<div class='col'>
+											<a href='view_topic.php?cid=".$cid."&tid=".$tid."'>
+												<button class='btn btn-dark text-white'>
+													<p class='btn ".$bgvotetallyvotenot."'><span ><i class='far fa-comments text-white'></i> | ".$content."</span></p>
+												</button>
+											</a>
+										</div>
+									</div>
+									<div class='row'>
+										<div class='col'></div>
+										<div class='col'>
+											<form action='update_updoots.php' method='post'>
+												<input type='hidden' name='rating_action' value='updoot'/>
+												<input type='hidden' name='tid' value='".$pid."'/>
+												<button class='btn ".$bgupvotenot." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+													<i class='fas fa-angle-up'style='font-size:.5vw;'></i>
+													| ".$number_of_updoots_vote_not."
+												</button>
+											</form>
+										</div>
+										<div class='col'>
+											<span class='badge ".$bgvoteytallyvotenot."' >
+												<i class='".$bgvoteyiconvotenot."'style='font-size:.5vw;'></i>
+												| ".$winpercvotenot."
+											</span>
+											
+										</div>
+										<div class='col'>
+											<form action='update_updoots.php' method='post'>
+												<input type='hidden' name='rating_action' value='boop'/>
+												<input type='hidden' name='tid' value='".$pid."'/>
+												<button class='btn ".$bgdownvotenot." ' type='submit' name='updoot_submit' id='updoot_submit' value='Up' >
+													<i class='fas fa-angle-down'style='font-size:.5vw;'></i>
+													| ".$number_of_boops_vote_not."
+												</button>
+											</form>
+
+										</div>
+										<div class='col'></div>
+									</div>
+									<div class='row'>	
+										<div class='col'>		
+												<span class='post_info text-white' style='font-size:.5vw;' >
+													<i class='fas fa-edit'style='font-size:.5vw;'></i>
+													by: 
+													<a href='profile.php?uid=".$post_creator."'>
+													<span class='badge bg-info' >
+														<i class='fas fa-user-circle'style='font-size:.5vw;'></i>
+														| ".$post_creator_username."
+													</span>
+													</a>
+													to 
+													<a href='view_category.php?cid=".$cid."'>
+													<span class='badge bg-primary'>
+														<i class='fas fa-book-open'style='font-size:.5vw;'></i>
+														| ".substr($topic_title, 0, 40)."
+													</span>
+													</a>
+													- ".$date."
+												</span>
+											
+										</div>
+
+									</div>
+									
+								<br />";
 
 								
 							}
@@ -989,17 +1234,7 @@ $uid = $_GET['uid'];
 							
 							
 						
-							$notvoted .= "<td><a href='view_topic.php?cid=".$cid."&tid=".$tid."'>".$topic_title."</a>
-							<br />
-							<span class='post_info'>Created by: <a href='profile.php?uid=".$topic_creator."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$tovote_username."</span></a><br/> on ".$topic_date."</span></td>";
 							
-							$notvoted .= "
-							<td align='center'><div class='text-center'><a href ='view_topic.php?cid=".$cid."&tid=".$tid."' class=''><button style='width:100%;'class='btn btn-success'>Vote</button></a></div></td>";
-							
-							$notvoted .= "
-						
-							</tr>";
-							$notvoted .= "<tr><td colspan='6'><hr/></td></tr>";
 							
 						}
 
@@ -1022,19 +1257,20 @@ $uid = $_GET['uid'];
 
 				}
 				
-				$notvoted .= "</table>";
-				echo $notvoted;
+
+				$notvoted_new .= "</div>";
+				echo $notvoted_new;
 			}
 			else{
 							
-				echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-				echo"<h2 class='text-center'>You haven't created a topic yet</h2>";
+				echo"<div class='row'>
+							<div class='col'><h2 class='text-center text-white'>There are no comments left for <a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> to vote on</h2></div>	
+							</div>";
+							echo $notvoted_new;
 			}
 
 		?>
 	</div>
-
-
 
 
 
@@ -1119,8 +1355,8 @@ $uid = $_GET['uid'];
 			}
 			else{
 							
-				echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-				echo"<h2 class='text-center'>You haven't Messaged anyone yet</h2>";
+				
+				echo"<h2 class='text-center text-white'><a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> hasn't messaged anyone yet</h2>";
 			}
 
 		?>
@@ -1201,8 +1437,8 @@ $uid = $_GET['uid'];
 			}
 			else{
 							
-				echo"<div class='text-center'><a href ='home.php' class=''><button style='width:100%;'class='btn btn-success'>Return to Sub Index</button></a></div>";
-				echo"<h2 class='text-center'>You haven't Messaged anyone yet</h2>";
+				
+				echo"<h2 class='text-center text-white'><a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> hasn't received a messaged from anyone yet</h2>";
 			}
 
 		?>

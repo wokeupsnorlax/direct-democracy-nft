@@ -33,6 +33,10 @@ if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?'
 		// Username already exists
 		echo "Username exists, please choose another! <a href='index.html'>Back</a>";
 	} else {
+		
+
+		
+
 
 		// Username doesnt exists, insert new account
 		if ($stmt = $con->prepare('INSERT INTO accounts (username, password, email, activation_code) VALUES (?, ?, ?, ?)')) {
@@ -40,11 +44,22 @@ if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?'
 			$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 			$uniqid = uniqid();
 			$stmt->bind_param('ssss', $_POST['username'], $password, $_POST['email'], $uniqid);
+			
+			
+			
+
+			
+
+
+
+
+
+
+
 
 			$stmt->execute();
-	
-	
-	
+			
+			
 	
 			$from    = 'inftgames69@gmail.com';
 
