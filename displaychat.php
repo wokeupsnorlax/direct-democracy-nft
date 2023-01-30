@@ -17,7 +17,7 @@ $stmt->fetch();
 $stmt->close();
 
 $stored_to_id = $_GET['to_id'];
-$stored_from_id = $_SESSION['id'];
+$stored_from_id = $_GET['from_id'];
 //$prof_username = $_GET['uname'];
 ?>
 <!DOCTYPE html>

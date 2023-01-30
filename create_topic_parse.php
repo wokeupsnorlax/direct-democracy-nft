@@ -34,7 +34,7 @@ $stmt->close();
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	</head>
 	<body class="loggedin bg-dark">
-		<nav class="navtop">
+		<nav class="navtop navbar navbar-expand-lg">
 			<div>
 				<h1><a href="home.php">Direct Democracy Communication</a></h1>
 				
@@ -48,8 +48,8 @@ $stmt->close();
 
 
 if(isset($_POST['topic_submit'])){
-    if (($_POST['topic_title'] =="") && ($_POST['topic_content'] =="")){
-        echo "Fill out both fields";
+    if (($_POST['topic_title'] =="") || ($_POST['topic_content'] =="")){
+        echo "<p class='bg-secondary text-white'>Fill out both fields</p>";
         exit();
     }else{
         

@@ -54,9 +54,13 @@ if(isset($_POST['reply_submit'])){
     $cid = $_POST['cid'];
     $tid = $_POST['tid'];
     
+    $post_replying_to = $_POST['post_replying_to'];
     $reply_content = $_POST['reply_content'];
+    if(!$post_replying_to){
+      $post_replying_to=0;
+    }
 
-    $sql = "INSERT INTO posts (category_id, topic_id, post_creator, post_content, post_date) VALUES ('".$cid."', '".$tid."', '".$creator."', '".$reply_content."', now() )";
+    $sql = "INSERT INTO posts (category_id, topic_id, post_creator, post_content, post_date, post_replying_to) VALUES ('".$cid."', '".$tid."', '".$creator."', '".$reply_content."', now(),'".$post_replying_to."' )";
     $res = mysqli_query($con, $sql) or die(mysqli_error());
 
         $sql2 = "UPDATE catergories SET last_post_date=now(), last_user_posted='".$creator."' WHERE id='".$cid."' LIMIT 1";

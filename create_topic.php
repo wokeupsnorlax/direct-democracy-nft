@@ -37,9 +37,12 @@ $uid = $_SESSION['id'];
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+		  <link href="dopenope.css" rel="stylesheet" type="text/css">
+
 	</head>
 	<body class="loggedin bg-dark">
-		<nav class="navtop">
+		<nav class="navtop navbar navbar-expand-lg">
 			<div>
 			<h1><a href="home.php">Direct Democracy Communication</a></h1>
             <a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$username?></button></a>
@@ -47,13 +50,14 @@ $uid = $_SESSION['id'];
 			</div>
 		</nav>
 		
-		<div class="content">
+		<div class="content ">
 			<h2 class='text-white'>Create a <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span></h2>
 
             <?php
 				
-                echo "<p>Welcome back, <a href='profile.php?uid=".$uid."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$username."</span></a>! Create a Topic and start a discussion!
-                <button type='button' class='btn btn-warning text-white' data-bs-toggle='modal' data-bs-target='#postModal'>Create <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span></button></p>";
+                echo "<p class='bg-secondary'>Welcome back, <a href='profile.php?uid=".$uid."'><span class='badge bg-info text-outline-black'><i class='fas fa-user-circle'></i> | ".$username."</span></a> !</p>
+				<p class='bg-secondary' >
+                <button type='button' class='btn btn-warning text-white text-outline-black' data-bs-toggle='modal' data-bs-target='#postModal' >Create a <span class='badge bg-primary'><i class='fas fa-book-open'></i> | Topic</span></button> and start a discussion!</p>";
     
                 ?>
 

@@ -14,10 +14,11 @@ make pretty
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="dopenope.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
-<nav class="navtop">
+<nav class="navtop navbar navbar-expand-lg">
 			<div>
 				<h1><a href="index.html">Direct Democracy Communication</a></h1>
 				<a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -132,40 +133,158 @@ make pretty
   </div>
 </div>
   
-<div class="container mt-5 text-center">
-  <div class="row">
-    <div class="col-sm-4">
-      <h3>Vision:</h3>
-      <p>The purpose of this project is to create, maintain, and update a free and open source communication and direct democracy platform. </p>
-      <p>We have the technology to vote on America's next Idol during the commercial break. We absolutely have the technology to form a direct democracy platform.</p>
-      <p>The overall goal would be to provide a communication platform that is free from being punished by the vague rule of "brigading" while weeding out pontential bad actors.</p>
-      <p>Everyone would be given their own NFT to access the platform and submit posts/comments.</p>
+
+<!-- Carousel -->
+<div id="carouseluno" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators/dots -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouseluno" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#carouseluno" data-bs-slide-to="1"></button>
+  </div>
+  
+  <!-- The slideshow/carousel -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="img/vision.png" alt="Vision" class="d-block" style="width:100%">
+      <div class="carousel-caption"  style="background: rgba(0, 0, 0, 0.6);">
+        
+        <a class="btn" data-bs-toggle="collapse" href="#Vision"><button class="btn btn-info text-white text-outline-black">
+          Vision</button>
+        </a>
+        <p style="font-size:50%;">Photo by <a href="https://unsplash.com/@joshuaearle?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Joshua Earle</a> on <a href="https://unsplash.com/photos/Dwheufds6kQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Unsplash</a></p>
+      </div>
     </div>
-    <div class="col-sm-4">
-      <h3>Why do this?</h3>
-      <p>The world is getting more divided as the top 1% try to distract us with Red vs Blue bs.</p>
-      <p>All People are Equal and deserve to be treated with the same respect no matter which hockey team, football club, Pokemon game, or political party has tricked you into thinking they're the best.</p>
-      <p>Just like Pokemon Red and Blue the political parties are the SAME GAME with a different Monster on the box.</p>
-      <p>I am neither left nor right, red nor blue. I'm from Pallet Town and I'm coming for the Elite.</p>
-      <p>This platform is for anyone wanting to treat ALL People Equal.</p>
-    </div>
-    <div class="col-sm-4">
-      <h3>Strategy:</h3>        
-      <p>Using open source collaboration to ensure everything is transparent, create a Reddit Clone (without the "TikTok" video features), 
-add NFT authentication so only users with the NFT can contribute to the commuinity, and mint.</p>
+    <div class="carousel-item">
+      <img src="img/why.png" alt="Why do this" class="d-block" style="width:100%">
+      <div class="carousel-caption" style="background: rgba(0, 0, 0, 0.6);">
+        
+        <a class="collapsed btn" data-bs-toggle="collapse" href="#Why"><button class="btn btn-info text-white text-outline-black">
+          Why do this?</button>
+        </a>
+        <p style="font-size:50%;">Photo by <a href="https://unsplash.com/@lamunix?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Ana Municio</a> on <a href="https://unsplash.com/photos/PbzntH58GLQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Unsplash</a></p>
+      </div> 
     </div>
   </div>
- </div>
   
-<div class="container mt-5 text-center"> 
-  <div class="row">
-    <div class="col-sm-4">
+  <!-- Left and right controls/icons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouseluno" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouseluno" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<div id="accordionuno">
+
+  
+    <div id="Vision" class="collapse" data-bs-parent="#accordionuno">
+      <div class="container-fluid p-5 bg-dark text-white text-center">
+        <h3>Vision</h3>
+        <p>The purpose of this project is to create, maintain, and update a free and open source communication and direct democracy platform. </p>
+        <p>We have the technology to vote on America's next Idol during the commercial break. We absolutely have the technology to form a direct democracy platform.</p>
+        <p>The overall goal would be to provide a communication platform that is free from being punished by the vague rule of "brigading" while weeding out pontential bad actors.</p>
+        <p>Everyone would be given their own NFT to access the platform and submit posts/comments.</p>
+      </div>
+    </div>
+  
+
+  
+    
+    <div id="Why" class="collapse" data-bs-parent="#accordionuno">
+      <div class="container-fluid p-5 bg-dark text-white text-center">
+      
+        <h3>Why do this?</h3>
+        <p>The world is getting more divided as the top 1% try to distract us with Red vs Blue bs.</p>
+        <p>All People are Equal and deserve to be treated with the same respect no matter which hockey team, football club, Pokemon game, or political party has tricked you into thinking they're the best.</p>
+        <p>Just like Pokemon Red and Blue the political parties are the SAME GAME with a different Monster on the box.</p>
+        <p>I am neither left nor right, red nor blue. I'm from Pallet Town and I'm coming for the Elite.</p>
+        <p>This platform is for anyone wanting to treat ALL People Equal.</p>
+      </div>
+    </div>
+
+</div>
+
+
+
+
+<div class="container-fluid p-5 bg-success text-white text-center">
+  <h3>Strategy:</h3>  
+  <p>Using open source collaboration to ensure everything is transparent, create a Reddit Clone (without the "TikTok" video features), 
+    add NFT authentication so only users with the NFT can contribute to the commuinity, and mint.</p>
+</div>
+
+
+<!-- Carousel -->
+<div id="carouseldos" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators/dots -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouseldos" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#carouseldos" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#carouseldos" data-bs-slide-to="2"></button>
+  </div>
+  
+  <!-- The slideshow/carousel -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="img/needed.png" alt="Requirements" class="d-block" style="width:100%">
+      <div class="carousel-caption"  style="background: rgba(0, 0, 0, 0.6);">
+        <a class="collapsed btn" data-bs-toggle="collapse" href="#Requirements"><button class="btn btn-info text-white text-outline-black">
+          Requirements</button>
+        </a>
+      <p style="font-size:50%;">Photo by <a href="https://unsplash.com/it/@stteee?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Stephen H</a> on <a href="https://unsplash.com/photos/0H-fqTZqWao?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Unsplash</a></p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="img/plan.png" alt="Why do this" class="d-block" style="width:100%">
+      <div class="carousel-caption" style="background: rgba(0, 0, 0, 0.6);">
+        <a class="collapsed btn" data-bs-toggle="collapse" href="#Plan"><button class="btn btn-info text-white text-outline-black">
+          An Overarching Plan</button>
+        </a>
+      <p style="font-size:50%;">Photo by <a href="https://unsplash.com/@halacious?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Hal Gatewood</a> on <a href="https://unsplash.com/photos/o2305170alM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Unsplash</a>
+      </p>
+      </div> 
+    </div>
+    <div class="carousel-item">
+      <img src="img/metrics.png" alt="Why do this" class="d-block" style="width:100%">
+      <div class="carousel-caption" style="background: rgba(0, 0, 0, 0.6);">
+        <a class="collapsed btn" data-bs-toggle="collapse" href="#Metrics"><button class="btn btn-info text-white text-outline-black">
+          Metrics</button>
+        </a>
+      <p style="font-size:50%;">Photo by <a href="https://unsplash.com/ja/@kyledarrenhanson?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Kyle Hanson</a> on <a href="https://unsplash.com/images/stock?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" style="font-size:100%;">Unsplash</a>
+  
+      </p>
+      </div> 
+    </div>
+  </div>
+  
+  <!-- Left and right controls/icons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouseldos" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouseldos" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+
+
+<div id="accordiondos">
+
+  <div id="Requirements" class="collapse" data-bs-parent="#accordiondos">
+    <div class="container-fluid p-5 bg-dark text-white text-center">
       <h3>Requirements:</h3>
       <p>The project requires a few dedicated volunteers to add their insights; make improvements to the plan; add database hosting to store site/userdata; and a few trusted NFT creators to mint the NFTS.</p>
       <p>Once the project is completed and functional, a trusted team of volunteers will be needed to vet and distribute the NFTs to the appropriate people.</p>
       <p>The criteria for receiving the NFT should be decided by the entire open source team.</p>
     </div>
-    <div class="col-sm-4">
+  </div>
+
+  <div id="Plan" class="collapse" data-bs-parent="#accordiondos">
+    <div class="container-fluid p-5 bg-dark text-white text-center">
       <h3>An Overarching Plan:</h3>
       <p>1) Create a website clone that looks and feels like Reddit.</p>
       <p>a) front end dev -make it pretty</p>
@@ -176,84 +295,161 @@ add NFT authentication so only users with the NFT can contribute to the commuini
       <p>b) 5x7 ratio gif</p>
       <p>c) 10x10 ratio png</p>
     </div>
-    <div class="col-sm-4">
+  </div>
+
+  <div id="Metrics" class="collapse" data-bs-parent="#accordiondos">
+    <div class="container-fluid p-5 bg-dark text-white text-center">
       <h3>Metrics:</h3>
       <p>I have decided to not track any Key Performance Indicators yet. Until we decide as a team the best way to track success/failures. </p>
       <p>For now, if the Front End for the users isn't up in a month I will consider that my responsibility and a personal failure if not completed.</p>
       <p>Absolute most optimistic goal: I'd like to get this fully up and running inside 3-5 months. With 2-5 other volunteers I believe this is absolutely achievable.</p>
     </div>
   </div>
-  </div>
+
+</div>
+
+<div class="container-fluid p-5 bg-success text-white text-center">
   
-<div class="container mt-5 text-center">
-  <div class="row">
-    <h2>Step-by-Step</h2>
-    <div class="col-sm-6">
+    <h2>Step-by-Step</h2> 
+    <a class="collapsed btn" data-bs-toggle="collapse" href="#Users"><button class="btn btn-info text-white text-outline-black">
+   For Users</button>
+    </a>
+  <a class="collapsed btn" data-bs-toggle="collapse" href="#Mods"><button class="btn btn-primary text-white text-outline-black">
+    For Mods</button>
+   </a>
+  
+</div>
+
+
+<div id="accordiontres">
+
+  <div id="Users" class="collapse show" data-bs-parent="#accordiontres">
+    <div class="container-fluid p-5 bg-info text-white text-center text-outline-black">
       <h3>For Users:</h3>
       <p>login page > logged in page(dashboard/home) > subreddits in your home/dashboard > posts on subs > comments on posts </p>
       <p>> user profiles</p>
     </div>
-    <div class="col-sm-6">
+  </div>
+
+  <div id="Mods" class="collapse" data-bs-parent="#accordiontres">
+    <div class="container-fluid p-5 bg-primary text-white text-center text-outline-black">
       <h3>For Mods:</h3>
       <p>mod dashboard > subs you mod</p>
       <p>> posts/comments you've flagged</p>
     </div>
   </div>
-  </div>
+
+</div>
+
+<div class="container-fluid p-5 bg-dark text-white text-center">
   
-<div class="container mt-5 text-center">
+  <h2>Suggested Database Structure for back end(rework as needed):</h2>
+  <a class="collapsed btn" data-bs-toggle="collapse" href="#User"><button class="btn btn-info text-white text-outline-black">
+ User</button>
+  </a>
+<a class="collapsed btn" data-bs-toggle="collapse" href="#Sub"><button class="btn btn-info text-white text-outline-black">
+  Sub</button>
+ </a>
+
+ <a class="collapsed btn" data-bs-toggle="collapse" href="#Post"><button class="btn btn-info text-white text-outline-black">
+  Post</button>
+ </a>
+
+ <a class="collapsed btn" data-bs-toggle="collapse" href="#PostContent"><button class="btn btn-info text-white text-outline-black">
+  Post Content</button>
+  </a>
+ 
+  <a class="collapsed btn" data-bs-toggle="collapse" href="#Chat"><button class="btn btn-info text-white text-outline-black">
+    Chat</button>
+  </a>
+ 
+  <a class="collapsed btn" data-bs-toggle="collapse" href="#Message"><button class="btn btn-info text-white text-outline-black">
+    Message</button>
+  </a>
+
+
+
+</div>
+
+
+<div class="container-fluid p-5 bg-secondary text-white text-center text-outline-black">
   <div class="row">
-    <h2>Suggested Database Structure for back end(rework as needed):</h2>
-    <div class="col-sm-4">
-      <h3>User:</h3>
-      <p>Username</p>
-      <p>Bio</p>
-      <p>Profile photo</p>
-      <p>Banner photo</p>
-      <p>Joined subreddits - list of SubReddit</p>
-      <p>Followers -list of Users</p>
-      <p>Following -list of Users</p>
-    </div>
+      <div id="User" class="col-sm-4 bg-dark collapse">
+        <form>
+          <div class="form-check form-switch">
+            <h3>User:</h3>
 
-    <div class="col-sm-4">
-      <h3>SubReddit:</h3>
-      <p>Name</p>
-      <p>Featured photo</p>
-      <p>Profile photo</p>
-      <p>Banner photo</p>
-      <p>NSFW -Yes/no with "no" as default</p>
-      <p>Mods -list of Users</p>
-    </div>
+            <p><input class="form-check-input" type="checkbox">Username</p>
+            <p><input class="form-check-input" type="checkbox">Bio</p>
+            <p><input class="form-check-input" type="checkbox">Profile photo</p>
+            <p><input class="form-check-input" type="checkbox">Banner photo</p>
+            <p><input class="form-check-input" type="checkbox">Joined subreddits - list of SubReddit</p>
+            <p><input class="form-check-input" type="checkbox">Followers -list of Users</p>
+            <p><input class="form-check-input" type="checkbox">Following -list of Users</p>
+          </div>
+        </form>
+      </div>
+    <div id="Sub" class="col-sm-4 collapse">
+      <form>
+        <div class="form-check form-switch">
+          <h3>SubReddit:</h3>
 
-    <div class="col-sm-4">
-      <h3>Post:</h3>
-      <p>Title</p>
-      <p>Upvotes -list of Users</p>
-      <p>Downvotes -list of Users</p>
-      <p>original sub -SubReddit</p>
+          <p><input class="form-check-input" type="checkbox">Name</p>
+          <p><input class="form-check-input" type="checkbox">Featured photo</p>
+          <p><input class="form-check-input" type="checkbox">Profile photo</p>
+          <p><input class="form-check-input" type="checkbox">Banner photo</p>
+          <p><input class="form-check-input" type="checkbox">NSFW -Yes/no with "no" as default</p>
+          <p><input class="form-check-input" type="checkbox">Mods -list of Users</p>
+        </div>
+      </form>
     </div>
+    <div  id="Post" class="col-sm-4 bg-dark collapse">
+      <form>
+        <div class="form-check form-switch">
+          <h3>Post:</h3>
 
-    <div class="col-sm-4">
-      <h3>Post Content:</h3>
-      <p>Post text</p>
-      <p>Post image</p>
-      <p>original post -Post</p>
+          <p><input class="form-check-input" type="checkbox">Title</p>
+          <p><input class="form-check-input" type="checkbox">Upvotes -list of Users</p>
+          <p><input class="form-check-input" type="checkbox">Downvotes -list of Users</p>
+          <p><input class="form-check-input" type="checkbox">original sub -SubReddit</p>
+        </div>
+      </form>
     </div>
+    
+    <div  id="PostContent" class="col-sm-4 collapse">
+      <form>
+        <div class="form-check form-switch">
+          <h3>Post Content:</h3>
 
-    <div class="col-sm-4">
-      <h3>Chat:</h3>
-      <p>Chat users -list of Users</p>
+          <p><input class="form-check-input" type="checkbox">Post text</p>
+          <p><input class="form-check-input" type="checkbox">Post image</p>
+          <p><input class="form-check-input" type="checkbox">original post -Post</p>
+        </div>
+      </form>
     </div>
+    
+    <div id="Chat" class="col-sm-4 bg-dark collapse">
+      <form>
+        <div class="form-check form-switch">
+          <h3>Chat:</h3>
 
-    <div class="col-sm-4">
-      <h3>Message:</h3>
-      <p>Content</p>
-      <p>Original chat -Chat</p>
+          <p><input class="form-check-input" type="checkbox">Chat users -list of Users</p>
+        </div>
+      </form>
     </div>
+    
+    <div id="Message" class="col-sm-4 collapse">
+      <form>
+        <div class="form-check form-switch">
+          <h3>Message:</h3>
 
+          <p><input class="form-check-input" type="checkbox">Content</p>
+          <p><input class="form-check-input" type="checkbox">Original chat -Chat</p>
+        </div>
+      </form>
+    </div>
 
   </div>
-
 
 </div>
 

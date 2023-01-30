@@ -19,142 +19,205 @@ $stmt_get_loggedin_user->close();
 
 $prof_id = $_GET['uid'];
 $uid = $_GET['uid'];
+
+
+
+
+//Get users table username from database
+$stmt_get_prof_username = $con->prepare('SELECT username FROM users WHERE id = ?');
+$stmt_get_prof_username->bind_param('i', $prof_id);
+$stmt_get_prof_username->execute();
+$stmt_get_prof_username->bind_result($prof_username);
+$stmt_get_prof_username->fetch();
+$stmt_get_prof_username->close();
+
+if (!$prof_username){
+	$prof_username = "MissingNo";
+}
+
 ?>
 
 <!DOCTYPE html>
 <html>
-	<head><meta charset="utf-8"><title>Profile Page</title>
-  		<link rel="icon" type="image/x-icon" href="img/favicon.ico">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-		
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.css">
-
-		<link href="style.css" rel="stylesheet" type="text/css">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-		  <link rel="stylesheet" href="style.scss" />
-		  
-		<style>
-.btn-vote {
-    --bs-btn-color: #fff;
-  --bs-btn-bg: #212529;
-  --bs-btn-border-color: #212529;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #424649;
-  --bs-btn-hover-border-color: #373b3e;
-  --bs-btn-focus-shadow-rgb: 66, 70, 73;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #4d5154;
-  --bs-btn-active-border-color: #373b3e;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #212529;
-  --bs-btn-disabled-border-color: #212529;
-}
-.btn-nope{
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #dc3545;
-  --bs-btn-border-color: #dc3545;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #bb2d3b;
-  --bs-btn-hover-border-color: #b02a37;
-  --bs-btn-focus-shadow-rgb: 225, 83, 97;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #b02a37;
-  --bs-btn-active-border-color: #a52834;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #dc3545;
-  --bs-btn-disabled-border-color: #dc3545;
-}
-
-
-.btn-vote-nope {
-	--bs-btn-color: #fff;
-  --bs-btn-bg: #212529;
-  --bs-btn-border-color: #212529;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #bb2d3b;
-  --bs-btn-hover-border-color: #b02a37;
-  --bs-btn-focus-shadow-rgb: 66, 70, 73;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #4d5154;
-  --bs-btn-active-border-color: #373b3e;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #212529;
-  --bs-btn-disabled-border-color: #212529;
-}
-
-
-
-
-.btn-dope{
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #198754;
-  --bs-btn-border-color: #198754;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #157347;
-  --bs-btn-hover-border-color: #146c43;
-  --bs-btn-focus-shadow-rgb: 60, 153, 110;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #146c43;
-  --bs-btn-active-border-color: #13653f;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #198754;
-  --bs-btn-disabled-border-color: #198754;
-}
-
-.btn-vote-dope {
-	--bs-btn-color: #fff;
-  --bs-btn-bg: #212529;
-  --bs-btn-border-color: #212529;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #157347;
-  --bs-btn-hover-border-color: #146c43;
-  --bs-btn-focus-shadow-rgb: 66, 70, 73;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #4d5154;
-  --bs-btn-active-border-color: #373b3e;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #212529;
-  --bs-btn-disabled-border-color: #212529;
-}
-
-
-
-		</style>
-	</head>
+<?php
+   include('components/htmlhead.php');
+?>
 	<body class="loggedin bg-dark">
-		<nav class="navtop">
+		<nav class="navtop navbar navbar-expand-lg">
 			<div>
 				<h1>
 					<a href="home.php"><button type="button" class="btn btn-primary" ><i class='far fa-bookmark'></i> | Subs</button></a>
 				</h1>
-				<a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$seshusername?></button></a>
+				
+				<!--a><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-circle"></i><?=$seshusername?></button></a-->
+
+				<!--PROFILE DROPDOWN-->
+				<a type="button" data-bs-toggle="dropdown"><button class="btn btn-success  dropdown-toggle" ><i class="fas fa-user-circle"></i><?=$seshusername?></button></a>
+    				
+					<ul class="dropdown-menu">
+						<li>
+							<a class="dropdown-item disabled" href="#">
+							ID: <?=$seshid?> <?php echo"<a href='profile.php?uid=".$seshid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> |"?> <?=$seshusername?></span></a>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item disabled" href="#">
+								<?=$seshemail?>
+							</a>
+						</li>
+					</ul>
+				<!--PROFILE DROPDOWN-->
+
+
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
 		</nav>
+
+		<!--LIVE CHAT NAV-->
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
+  			<div class="container-fluid dropup">
+    			<!--a type="button" data-bs-toggle="dropdown"><button class="btn btn-info text-white  dropdown-toggle" >
+					<i class='far fa-comment-alt'></i>
+
+				</button></a-->
+
+				<button class='btn btn-outline-info text-white' data-bs-toggle='modal' data-bs-target='#chatModal'><i class='far fa-comment-alt'></i> | Send Message</button></div>
+
+
+
+    				<!--LIVE CHAT BOX-->
+					<ul class="dropdown-menu">
+		<div class="row">	
+			<div class="col-2">			
+					
+			
+			
+<nav class="navbar bg-light">
+  	<?php 
+		$stmt_dms = $con->prepare('SELECT to_id,from_id,message_content,message_date FROM dm WHERE from_id='.$seshid.' OR to_id = '.$seshid.' ORDER BY message_date ASC');
+		$stmt_dms->execute();
+		$stmt_dms->store_result();
+		$stmt_dms->bind_result($to_id,$from_id,$message_content,$message_date);
+		
+		$dms_w_prof_user = "";
+		
+		if ($stmt_dms->num_rows > 0) {
+			while(($row_dms = $stmt_dms->fetch()) ){
+
+				//if($from_id==$to_id){
+					//to user from profile
+					//if($from_id==$seshid){
+						$stmt_users_who_dms_w_prof_user = $con->prepare('SELECT id,username FROM users WHERE id='.$from_id.' OR id='.$to_id.'  ORDER BY username ASC');
+						$stmt_users_who_dms_w_prof_user->execute();
+										
+						$stmt_users_who_dms_w_prof_user->store_result();
+						$stmt_users_who_dms_w_prof_user->bind_result($chat_uid,$chat_username);
+							
+						$users_who_dms_w_prof_user = "";
+							
+						if ($stmt_users_who_dms_w_prof_user->num_rows > 0) {
+							while(($row_users_who_dms_w_prof_user = $stmt_users_who_dms_w_prof_user->fetch()) ){
+
+								if($from_id!=$to_id){
+								
+								$users_who_dms_w_prof_user .= "
+									<form method='post' action= >
+										<input type='hidden' name='chat_uid' value='".$chat_uid."'/>
+										<button class='btn bg-info ' type='submit' name='prof_submit' id='prof_submit' value='Up' >
+											<i class='fas fa-user-circle'></i> | ".$chat_username."</span>
+										</button></form>";
+
+
+										
+								}
+
+
+							}
+							echo $users_who_dms_w_prof_user;
+							echo "";
+						}else {
+							echo "<p class='text-center text-white bg-secondary'>There are no posts available! Make a post and let your voice be heard!</p>";
+						}
+						$stmt_users_who_dms_w_prof_user->fetch();
+						$stmt_users_who_dms_w_prof_user->close();
+					//}
+				//}
+
+			}
+			echo $dms_w_prof_user;
+			echo "";
+		}else {
+			echo "<p class='text-center text-white bg-secondary'>No chats started</p>";
+		}
+		$stmt_dms->fetch();
+		$stmt_dms->close();
+		
+		echo"</nav></div>";
+
+		if(!isset($_POST['prof_submit'])){
+			
+		echo"
+
+			<div class='col'>	<iframe src='displaychat.php?to_id=".$seshid."&from_id=".$seshid."' width='100%' height='500' scrolling='yes'>
+					
+					</iframe>";
+		
+		}else{
+			mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+			$to_idnew = $_POST['chat_uid'];
+			echo"<div class='col'>	<iframe src='displaychat.php?to_id=".$to_idnew."&from_id=".$seshid."' width='100%' height='500' scrolling='yes'>
+					
+					</iframe>";
+		}
+			
+
+
+					
+					
+
+
+
+
+
+
+
+					?>
+					
+					
+						<li>
+							<!--a class="dropdown-item disabled" href="#">
+							ID: <?=$seshid?> <a href='profile.php?uid=".$seshid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | <?=$seshusername?></span></a>
+							</a-->
+						</li>
+						<li>
+							<a class="dropdown-item">
+								<form action='create_message_parse.php' method='post' autocomplete='off'>
+									<input type='hidden' name='to_id' value='<?php echo $to_id; ?>'/>
+									<input type='hidden' name='from_id' value='<?php echo $from_id; ?>'/>
+									
+									<tr>
+									<td><textarea class='form-control' rows='2' id='message_content' name='message_content' type='text'></textarea></td>
+
+									<td width='180'><button class='btn btn-primary' style='width: 100%;' type='submit' name='dm_submit' >Message</button></td>
+									</tr>
+								</form>
+							</a>
+						</li>
+			</div>
+		</div>
+
+					</ul>
+  			</div>
+		</nav>
+
 		<div class="content container ">
 			<?php
 
-				//Get users table username from database
-				$stmt_get_prof_username = $con->prepare('SELECT username FROM users WHERE id = ?');
-				$stmt_get_prof_username->bind_param('i', $prof_id);
-				$stmt_get_prof_username->execute();
-				$stmt_get_prof_username->bind_result($prof_username);
-				$stmt_get_prof_username->fetch();
-				$stmt_get_prof_username->close();
-
-				if (!$prof_username){
-					$prof_username = "MissingNo";
-				}
+				
 
 				echo "<div class='row bg-dark'><h2 class=' text-white'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | $prof_username</span>'s Profile</h2>";
 
-				echo "<button class='btn btn-info text-white' data-bs-toggle='modal' data-bs-target='#messageModal'><i class='far fa-comment-alt'></i> | Send Message</button></div>";
+				echo "<button class='btn btn-outline-info text-white' data-bs-toggle='modal' data-bs-target='#messageModal'><i class='far fa-comment-alt'></i> | Send Message</button></div>";
 			?>
 
 			<div class="tab-content bg-secondary  ">
@@ -216,7 +279,7 @@ $uid = $_GET['uid'];
 								$stmt_prof_topics_cats->execute();
 								$stmt_prof_topics_cats->store_result();
 								$stmt_prof_topics_cats->bind_result($t_cid,$t_c_title,$t_c_description,$t_c_last_user_posted,$t_c_last_post_date);
-
+								$stmt_prof_topics_cats->fetch();
 								if (!$t_c_description){
 									$t_c_description = "MissingDesc";
 								}
@@ -282,7 +345,7 @@ $uid = $_GET['uid'];
 
 								$stmt_reply_count->close();
 
-								$stmt_prof_topics_cats->fetch();
+								
 								$stmt_prof_topics_cats->close();
 							}
 							$prof_topics .= "</div>";
@@ -887,13 +950,13 @@ $uid = $_GET['uid'];
 							
 							
 						}
-						//if the user hasn't created any posts yet
+						//if the user hasn't created any comments yet
 						
 						$stmt_prof_posts_votes->fetch();
 						$stmt_prof_posts_votes->close();
 						}
 					
-					$prof_votes .= "</div>";
+							$prof_votes .= "</div>";
 							
 							echo $prof_votes;
 					
@@ -1264,9 +1327,17 @@ if($number_of_boops_vote_not != $number_of_updoots_vote_not ){
 			else{
 							
 				echo"<div class='row'>
-							<div class='col'><h2 class='text-center text-white'>There are no comments left for <a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> to vote on</h2></div>	
-							</div>";
-							echo $notvoted_new;
+						<div class='col'>
+							<h2 class='text-center text-white'>
+								There are no comments for <a href='profile.php?uid=".$prof_id."'><span class='badge bg-info'><i class='fas fa-user-circle'></i> | ".$prof_username."</span></a> to vote on
+							</h2>
+						</div>	
+					</div>";
+					$notvoted_new .= "</div>";
+
+
+
+							
 			}
 
 		?>
@@ -1456,45 +1527,6 @@ if($number_of_boops_vote_not != $number_of_updoots_vote_not ){
 
 
 
-<!-- The Modal -->
-<div class="modal" id="profileModal">
-  <div class="modal-dialog">
-    <div class="modal-content bg-secondary text-white">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Account Details</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-		<table>
-		 <tr>
-		  <td>Username ID:</td>
-		  <td><?=$_SESSION['id']?></td>
-		 </tr>
-		 <tr>
-		  <?php
-					
-		echo "<td>Username:</td>
-		  <td><a href='profile.php?uid=".$seshid."'><span class='badge bg-success'><i class='fas fa-user-circle'></i> | ".$seshusername."</span></a></td>";
-	
-
-		  
-		?>
-		 </tr>
-		 <tr>
-		  <td>Email:</td>
-		  <td><?=$seshemail?></td>
-		 </tr>
-		</table>
-
-      </div>
-
-    </div>
-  </div>
-</div>
 
 
 
@@ -1564,6 +1596,146 @@ if($number_of_boops_vote_not != $number_of_updoots_vote_not ){
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- The Modal -->
+<div class="modal " id="chatModal">
+  <div class="modal-dialog">
+    <div class="modal-content bg-secondary">
+
+      <!-- Modal Header -->
+      <div class="modal-header text-white">
+        
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body text-center" >
+		
+		<div class="row">	
+			<div class="col-2">			
+					
+				<nav class="navbar bg-light">
+					<?php 
+						$stmt_dms = $con->prepare('SELECT to_id,from_id,message_content,message_date FROM dm WHERE from_id='.$seshid.' OR to_id = '.$seshid.' ORDER BY message_date ASC');
+						$stmt_dms->execute();
+						$stmt_dms->store_result();
+						$stmt_dms->bind_result($to_id,$from_id,$message_content,$message_date);
+						
+						$dms_w_prof_user = "";
+					
+						if ($stmt_dms->num_rows > 0) {
+							while(($row_dms = $stmt_dms->fetch()) ){
+
+								//if($from_id==$to_id){
+									//to user from profile
+									//if($from_id==$seshid){
+								$stmt_users_who_dms_w_prof_user = $con->prepare('SELECT id,username FROM users WHERE id='.$from_id.' OR id='.$to_id.'  ORDER BY username ASC LIMIT 1');
+								$stmt_users_who_dms_w_prof_user->execute();
+													
+								$stmt_users_who_dms_w_prof_user->store_result();
+								$stmt_users_who_dms_w_prof_user->bind_result($chat_uid,$chat_username);
+										
+								$users_who_dms_w_prof_user = "";
+										
+								if ($stmt_users_who_dms_w_prof_user->num_rows > 0) {
+									while(($row_users_who_dms_w_prof_user = $stmt_users_who_dms_w_prof_user->fetch()) ){
+
+										if($from_id!=$to_id){
+											
+											$users_who_dms_w_prof_user .= "
+						<form method='post' action= >
+							<input type='hidden' name='chat_uid' value='".$chat_uid."'/>
+							<button class='btn bg-info ' type='submit' name='prof_submit' id='prof_submit' value='Up' ><i class='fas fa-user-circle'></i> | ".$chat_username."</span></button>
+						</form>";
+
+										}
+
+
+									}
+									echo $users_who_dms_w_prof_user;
+									echo "";
+								}else {
+									echo "<p class='text-center text-white bg-secondary'>There are no posts available! Make a post and let your voice be heard!</p>";
+								}
+								$stmt_users_who_dms_w_prof_user->fetch();
+								$stmt_users_who_dms_w_prof_user->close();
+								//}
+								//}
+							}
+							echo $dms_w_prof_user;
+							echo "";
+						}else {
+							echo "<p class='text-center text-white bg-secondary'>No chats started</p>";
+						}
+						$stmt_dms->fetch();
+						$stmt_dms->close();
+					
+						echo"
+				</nav>
+			</div>";
+
+						if(!isset($_POST['prof_submit'])){
+						
+							echo"
+
+			<div class='col'>	
+				<iframe src='displaychat.php?to_id=".$seshid."&from_id=".$seshid."' width='100%' height='500' scrolling='yes'></iframe>";
+					
+						}else{
+							mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+							$to_idnew = $_POST['chat_uid'];
+							echo"
+			<div class='col'>	
+				<iframe src='displaychat.php?to_id=".$to_idnew."&from_id=".$seshid."' width='100%' height='500' scrolling='yes'></iframe>";
+						}
+					?>
+			
+			</div>
+		</div>
+			
+			
+			
+		
+		<div class="row">
+			<form action='create_message_parse.php' method='post' autocomplete='off'>
+					<input type='hidden' name='to_id' value='<?php echo $to_id; ?>'/>
+					<input type='hidden' name='from_id' value='<?php echo $from_id; ?>'/>
+					
+					<tr>
+					<td><textarea class='form-control' rows='2' id='message_content' name='message_content' type='text'></textarea></td>
+
+					<td width='180'><button class='btn btn-primary' style='width: 100%;' type='submit' name='dm_submit' >Message</button></td>
+					</tr>
+			</form>
+		</div>
+	
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 			
 	</body>
 </html>
